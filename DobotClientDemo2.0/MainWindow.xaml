@@ -30,7 +30,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button x:Name="XI" Content="X+"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="78" Margin="32,0,0,0" PreviewMouseDown="OnEvent" PreviewMouseUp="OnEvent" Click="XI_Click"/>
+                    <Button x:Name="XI" Content="X+"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="78" Margin="32,0,0,0" PreviewMouseDown="OnEvent" PreviewMouseUp="OnEvent"/>
                     <Button x:Name="YI" Content="Y+"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="78" Margin="32,0,0,0" PreviewMouseDown="OnEvent" PreviewMouseUp="OnEvent"/>
                     <Button x:Name="ZI" Content="Z+"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="78" Margin="32,0,0,0" PreviewMouseDown="OnEvent" PreviewMouseUp="OnEvent"/>
                     <Button x:Name="RI" Content="R+"  VerticalAlignment="Center" HorizontalAlignment="Left" Width="78" Margin="32,0,0,0" PreviewMouseDown="OnEvent" PreviewMouseUp="OnEvent"/>
@@ -147,5 +147,6 @@
             <TextBlock  TextWrapping="Wrap" Text="Tip：" Margin="10 8 0 0" Canvas.Left="0"/>
             <Label x:Name="lbTip" Content="" Canvas.Left="72" Canvas.Top="3" FontWeight="Bold"/>
         </Canvas>
+        <Button Content="Button" Margin="9,85,-9,107" Grid.RowSpan="3" Click="Button_Click"/>
     </Grid>
 </Window>
