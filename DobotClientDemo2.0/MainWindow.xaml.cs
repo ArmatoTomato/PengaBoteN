@@ -19,6 +19,7 @@ namespace DobotClientDemo
     /// <summary>
     /// MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
         private byte isJoint = (byte)0;
@@ -29,7 +30,11 @@ namespace DobotClientDemo
 
         public MainWindow()
         {
-            ///添加事件处理
+            DataBaseSQL db;
+            db = new DataBaseSQL("ATM.db");
+            db.CreateDataBase();
+
+
             ///attach event handler to corresponding events
             InitializeComponent();
             
@@ -42,9 +47,9 @@ namespace DobotClientDemo
 
             modeStyle.SelectedIndex = 2;
 
+
             //ConsoleManager.Show();
         }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
