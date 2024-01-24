@@ -147,5 +147,6 @@
             <TextBlock  TextWrapping="Wrap" Text="Tip：" Margin="10 8 0 0" Canvas.Left="0"/>
             <Label x:Name="lbTip" Content="" Canvas.Left="72" Canvas.Top="3" FontWeight="Bold"/>
         </Canvas>
+        <Button Content="Button" Margin="9,85,-9,107" Grid.RowSpan="3" Click="Button_Click"/>
     </Grid>
 </Window>

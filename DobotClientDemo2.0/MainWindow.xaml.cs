@@ -599,19 +599,42 @@ namespace DobotClientDemo
             }
         }
 
-        //private void XI_Click(object sender, RoutedEventArgs e)
-        //{
 
-        //    XI.Content = "X+";
-        //    YI.Content = "Y+";
-        //    ZI.Content = "Z+";
-        //    RI.Content = "R+";
 
-        //    XN.Content = "X-";
-        //    YN.Content = "Y-";
-        //    ZN.Content = "Z-";
-        //    RN.Content = "R-";
-        
-        //}
+        private void XI_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (!isConnectted)
+                return;
+
+            Button obj = (Button)sender;
+            String con = obj.Content.ToString();
+            UInt64 cmdIndex = 0;
+
+            float x, y, z, r, gripper, pTime;
+            x = 100;
+            y = 10;
+            z = 18;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (!isConnectted)
+                return;
+
+            Button obj = (Button)sender;
+            String con = obj.Content.ToString();
+            UInt64 cmdIndex = 0;
+
+            float x, y, z, r, gripper, pTime;
+            x = 100;
+            y = 10;
+            z = 18;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
+        }
     }
 }
