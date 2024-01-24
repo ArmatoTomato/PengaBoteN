@@ -43,73 +43,37 @@ public class DataBaseSQL
 
     public void CreateDataBase()
     {
-        if (WriteToFile() == true)
+        
+        Open();
+
+        try
         {
-            Open();
             _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT);";
             _command.ExecuteNonQuery();
         }
-        //TRY CATCH ISTÄLLET KMS
-
+        catch(Exception e)
+        {
+            WriteToFile(e); //Kanske onödig men cool
+        }
+        
         Close();
 
         AddUser("Anton", 500);
     }
 
-    public bool WriteToFile()
+    public void WriteToFile(System.Exception e)
     {
-        bool test;
-
         try
         {
-            StreamWriter sw = new StreamWriter("ChekIfRan");
-            sw.WriteLine(1);
+            StreamWriter sw = new StreamWriter("Error");
+            sw.WriteLine(e);
             sw.Close();
-            test = true;
         }
-        catch (Exception e)
-        {
-            test = false;
-        }
-
-        return test;
-    }
-
-    private static bool ReadFile()
-    {
-        List<string> rowsInFile = new List<string>();
-        String line;
-        try
-        {
-            StreamReader sr = new StreamReader("ChekIfRan");
-            line = sr.ReadLine();
-
-            while (line != null)
-            {
-                line = sr.ReadLine();
-                rowsInFile.Add(line);
-            }
-
-            sr.Close();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Exception: " + e.Message);
-        }
-        finally
+        catch (Exception a)
         {
 
-        }
-        if(rowsInFile.Contains("1"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
-
 
     private void CheckSQLiteVersion()
     {
@@ -129,10 +93,6 @@ public class DataBaseSQL
         string date = _command.ExecuteScalar().ToString();
         Close();
     }
-
-
-
-
 
     public bool AddUser(string name, int balance)
     {
