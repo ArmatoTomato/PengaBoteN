@@ -35,12 +35,12 @@ namespace DobotClientDemo
             
             sld.Value = 30;
             sld.AddHandler(Slider.MouseLeftButtonUpEvent, new MouseButtonEventHandler(blurSlider_MouseLeftButtonUp), true);
-            sld1.Value = 30;
-            sld1.AddHandler(Slider.MouseLeftButtonUpEvent, new MouseButtonEventHandler(blurSlider_MouseLeftButtonUp), true);
-            sldAcc.Value = 30;
-            sldAcc.AddHandler(Slider.MouseLeftButtonUpEvent, new MouseButtonEventHandler(blurSlider_MouseLeftButtonUp), true);
+            //sld1.Value = 30;
+            //sld1.AddHandler(Slider.MouseLeftButtonUpEvent, new MouseButtonEventHandler(blurSlider_MouseLeftButtonUp), true);
+            //sldAcc.Value = 30;
+            //sldAcc.AddHandler(Slider.MouseLeftButtonUpEvent, new MouseButtonEventHandler(blurSlider_MouseLeftButtonUp), true);
 
-            modeStyle.SelectedIndex = 2;
+            //modeStyle.SelectedIndex = 2;
 
             //ConsoleManager.Show();
         }
@@ -195,7 +195,7 @@ namespace DobotClientDemo
 
             DobotDll.GetPose(ref pose);
 
-            this.Dispatcher.BeginInvoke((Action)delegate()
+            this.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 tbJoint1Angle.Text = pose.jointAngle[0].ToString();
                 tbJoint2Angle.Text = pose.jointAngle[1].ToString();
@@ -297,13 +297,14 @@ namespace DobotClientDemo
             }
             Msg("", MsgInfoType.Info);
 
-            switch(con)
+            switch (con)
             {
                 case "SendPlaybackCmd":
                     {
                         obj.IsEnabled = false;
                         cmdIndex = ptp((byte)modeStyle.SelectedIndex, x, y, z, r);
-                        while (true) {
+                        while (true)
+                        {
                             UInt64 retIndex = 0;
                             int ind = DobotDll.GetQueuedCmdCurrentIndex(ref retIndex);
                             if (ind == 0 && cmdIndex <= retIndex)
@@ -320,7 +321,8 @@ namespace DobotClientDemo
                             waitcmd.timeout = (uint)waitTime;
                             DobotDll.SetWAITCmd(ref waitcmd, false, ref cmdIndex);
                         }
-                    }break;
+                    }
+                    break;
                 case "SendCPCmd":
                     {
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
@@ -334,7 +336,8 @@ namespace DobotClientDemo
                                 break;
                             }
                         }
-                    }break;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -514,7 +517,7 @@ namespace DobotClientDemo
         private void Msg(string str, MsgInfoType infoType)
         {
             lbTip.Content = str;
-            switch(infoType)
+            switch (infoType)
             {
                 case MsgInfoType.Error:
                     lbTip.Foreground = new SolidColorBrush(Colors.Red);
@@ -522,7 +525,7 @@ namespace DobotClientDemo
                 case MsgInfoType.Info:
                     lbTip.Foreground = new SolidColorBrush(Colors.Black);
                     break;
-                default: 
+                default:
                     break;
             }
         }
@@ -596,7 +599,40 @@ namespace DobotClientDemo
 
 
 
-        private void XI_Click(object sender, RoutedEventArgs e)
+
+        private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (!isConnectted)
+                return;
+
+            Button obj = (Button)sender;
+            String con = obj.Content.ToString();
+            UInt64 cmdIndex = 0;
+
+            float x, y, z, r;
+
+            x = 200;
+            y = 10;
+            z = 25;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
+
+            z = 15;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
+            DobotDll.SetEndEffectorSuctionCup(true, true, false, ref cmdIndex);
+
+            x = 100;
+            y = 10;
+            z = 18;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
+            //DobotDll.SetEndEffectorSuctionCup(false, false, false, ref cmdIndex);
+
+        }
+
+        private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
 
             if (!isConnectted)
@@ -616,20 +652,11 @@ namespace DobotClientDemo
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
-            if (!isConnectted)
-                return;
-
-            Button obj = (Button)sender;
-            String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
-
-            float x, y, z, r, gripper, pTime;
-            x = 100;
-            y = 10;
-            z = 18;
-
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
+            DobotDll.SetEndEffectorSuctionCup(true, true, false, ref cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(false, false, false, ref cmdIndex);
         }
+
+
     }
 }
