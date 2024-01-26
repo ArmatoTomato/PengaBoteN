@@ -262,10 +262,9 @@ namespace DobotClientDemo
             return cmdIndex;
         }
 
-        private UInt64 cp(byte mod, float x, float y, float z, float velocity)
+        private UInt64 cp(byte mod, float x, float y, float z, float velocity, UInt64 cmdIndex = 0)
         {
             CPCmd pdbCmd;
-            UInt64 cmdIndex = 0;
 
             pdbCmd.cpMode = mod;
             pdbCmd.x = x;
@@ -605,38 +604,6 @@ namespace DobotClientDemo
 
 
 
-        private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (!isConnectted)
-                return;
-
-            Button obj = (Button)sender;
-            String con = obj.Content.ToString();
-            UInt64 cmdIndex = 0;
-
-            float x, y, z, r;
-
-            x = 200;
-            y = 10;
-            z = 25;
-
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
-
-            z = 15;
-
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
-            DobotDll.SetEndEffectorSuctionCup(true, true, false, ref cmdIndex);
-
-            x = 100;
-            y = 10;
-            z = 18;
-
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
-            //DobotDll.SetEndEffectorSuctionCup(false, false, false, ref cmdIndex);
-
-        }
-
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
 
@@ -646,20 +613,75 @@ namespace DobotClientDemo
             Button obj = (Button)sender;
             String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
+            DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
 
-            float x, y, z, r, gripper, pTime;
-            x = 100;
+            float x, y, z, r;
+
+            x = 200;
             y = 10;
+            z = 25;
+            DobotDll.SetQueuedCmdStartExec();
+            UInt64 temp = cmdIndex;
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            
+            z = 13;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
+
+            x = 10;
+            y = -150;
             z = 18;
 
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100);
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+            z = -43;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(false, false, true, ref cmdIndex);
+           
+            while (temp < cmdIndex)
+                DobotDll.GetQueuedCmdCurrentIndex(ref temp);
+            //loopen krävs för att säkerställa att alla komandon får sina rätta index och att de hamnar i kön och utförs korrekt
+            DobotDll.SetQueuedCmdStopExec();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
+
+            if (!isConnectted)
+                return;
+
+            Button obj = (Button)sender;
+            String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
-            DobotDll.SetEndEffectorSuctionCup(true, true, false, ref cmdIndex);
-            DobotDll.SetEndEffectorSuctionCup(false, false, false, ref cmdIndex);
+            DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
+
+            float x, y, z, r;
+
+            x = 10;
+            y = -150;
+            z = -43;
+            DobotDll.SetQueuedCmdStartExec();
+            UInt64 temp = cmdIndex;
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
+
+            z = 18;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+
+            x = 200;
+            y = 10;
+            z = 25;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(false, false, true, ref cmdIndex);
+
+            while (temp < cmdIndex)
+                DobotDll.GetQueuedCmdCurrentIndex(ref temp);
+            DobotDll.SetQueuedCmdStopExec();
         }
 
 

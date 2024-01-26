@@ -156,7 +156,7 @@
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal">
                         <Button Content="SendCPCmd" Width="150" Height="40" FontSize="24" Click="ProcessEvt" Margin="90 0 0 0"/>
-                        <Button Content="Button" Click="Button_Click"/>
+                        
                         <Button Content="SendPlaybackCmd" Width="150" Height="40" FontSize="24" Click="ProcessEvt" Margin="40 0 0 0"/>
                         <CheckBox  x:Name="sync" Grid.Row="2" Content="Snchronous Data" Margin="10 20 0 0" Width="120"/>
                     </StackPanel>
