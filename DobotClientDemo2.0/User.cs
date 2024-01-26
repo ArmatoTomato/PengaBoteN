@@ -21,6 +21,7 @@ namespace DobotClientDemo
             _id = id;
         }
 
+
         public void LogIn()
         {
 
@@ -37,39 +38,5 @@ namespace DobotClientDemo
         //    }
         //}
 
-        private void Encrypt()
-        {
-            List<string> key = ReadFile("Encryption");
-        }
-
-        public static List<string> ReadFile(string filename)
-        {
-            List<string> rowsInFile = new List<string>();
-            String line;
-            try
-            {
-                StreamReader sr = new StreamReader("Encryption");
-
-                line = sr.ReadLine();
-
-                while (line != null)
-                {
-                    rowsInFile.Add(line);
-                    line = sr.ReadLine();
-                }
-
-                sr.Close();
-            }
-            catch (Exception error)
-            {
-
-            }
-            finally
-            {
-
-            }
-
-            return rowsInFile;
-        }
     }
 }
