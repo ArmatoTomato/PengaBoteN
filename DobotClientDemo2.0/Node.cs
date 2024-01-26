@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Shapes;
 
@@ -14,11 +15,13 @@ namespace DobotClientDemo
     {
         public T _data;
         public Node<T> _next;
-    
+        public Node<T> _prev;
+
         public Node(T data)
         {
             _data = data;
             _next = null;
+            _prev = null;
         }
     }
 
@@ -39,12 +42,6 @@ namespace DobotClientDemo
                 temp = temp._next;
             }
             temp._next = new Node<T>(data);
-        }
-
-
-        private void Encrypt()
-        {
-            List<string> key = ReadFile();
         }
 
         public static List<string> ReadFile()
@@ -76,6 +73,26 @@ namespace DobotClientDemo
 
             return rowsInFile;
         }
+        private void Encrypt()
+        {
+            Node<T> temp = _first;
+            List<string> Password_BoxList = new List<string>();
+
+            int i = 0;
+
+            if (Password_Box.Text != "")
+            {
+                while (temp._next != null)
+                {
+                    if ((string)(Convert.ChangeType(temp, typeof(string))) == Password_BoxList[i])
+                    {
+                        PasswordList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
+                        i++;
+                    }
+                    temp = temp._next;
+                }
+            }
+        }
 
         private void Decrypt()
         {
@@ -85,12 +102,21 @@ namespace DobotClientDemo
 
             int i = 0;
 
-            while ((string)(Convert.ChangeType(temp._next, typeof(string))) == PasswordList[i])
+            while (temp._next != null)
             {
-                DecryptedList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
+                if ((string)(Convert.ChangeType(temp._next, typeof(string))) == PasswordList[i])
+                {
+                    DecryptedList.Add((string)(Convert.ChangeType(temp, typeof(string))));
+                    i++;                    
+                }
                 temp = temp._next;
             }
         }
+
+        //Ladda in löseord från SQL
+        //Gör om string till lista
+        //Allt i små bokstäver
+
 
     }
 

@@ -48,7 +48,7 @@ public class DataBaseSQL
 
         try
         {
-            _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT);";
+            _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT, password TEXT);";
             _command.ExecuteNonQuery();
         }
         catch(Exception e)
