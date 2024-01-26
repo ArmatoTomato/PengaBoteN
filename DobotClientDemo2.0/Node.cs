@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Windows.Shapes;
 
 namespace DobotClientDemo
 {
@@ -78,7 +79,17 @@ namespace DobotClientDemo
 
         private void Decrypt()
         {
+            List<string> PasswordList = new List<string>();
+            List<string> DecryptedList = new List<string>();
+            Node<T> temp = _first;
 
+            int i = 0;
+
+            while ((string)(Convert.ChangeType(temp._next, typeof(string))) == PasswordList[i])
+            {
+                DecryptedList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
+                temp = temp._next;
+            }
         }
 
     }
