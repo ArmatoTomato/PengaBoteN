@@ -4,17 +4,24 @@
         Title="Dobot Demo" Height="350" Width="620" Closed="Window_Closed"
          ResizeMode="NoResize" Loaded="Window_Loaded">
     <Grid Background="LightPink">
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="116" />
             <RowDefinition Height="116" />
             <RowDefinition Height="116" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="1" Width=" 620" Margin="0,0,0,0" Grid.RowSpan="2">
+        <StackPanel x:Name="ATMWindow" Visibility ="Collapsed" Grid.Row="1" Width=" 620" Margin="0,0,0,0" Grid.RowSpan="2">
 
             <Button Content="Withdraw" Height="40" Margin="0,0,0,10" Click="ButtonWithdraw_Click" Grid.Row="2"/>
             <Button Content="Deposit"  Height="40" Click="ButtonDeposit_Click" Grid.Row="2"/>
 
+        </StackPanel>
+
+        <StackPanel x:Name="LoginWindow" Grid.Row="1" Width=" 620" Margin="0,0,0,0" Grid.RowSpan="2">
+            <TextBox x:Name="IDTextBox" TextWrapping="Wrap" Text="ID" Width="500" Height="30"/>
+            <TextBox x:Name="NameTextBox" TextWrapping="Wrap" Margin="0,50,0,0" Text="Password" Width="500" Height="30"/>
+
+            <Button Content="Login" Margin="0 15 0 0" Width="500" Height="30" Click="ButtonLogin_Click" />
         </StackPanel>
 
         <StackPanel Grid.Row="2" Width=" 620">
@@ -156,7 +163,7 @@
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal">
                         <Button Content="SendCPCmd" Width="150" Height="40" FontSize="24" Click="ProcessEvt" Margin="90 0 0 0"/>
-                        
+
                         <Button Content="SendPlaybackCmd" Width="150" Height="40" FontSize="24" Click="ProcessEvt" Margin="40 0 0 0"/>
                         <CheckBox  x:Name="sync" Grid.Row="2" Content="Snchronous Data" Margin="10 20 0 0" Width="120"/>
                     </StackPanel>

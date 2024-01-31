@@ -684,6 +684,13 @@ namespace DobotClientDemo
             DobotDll.SetQueuedCmdStopExec();
         }
 
+        private void ButtonLogin_Click(object sender, EventArgs e)
+        {
+            string ID = IDTextBox.Text;
+            string name = NameTextBox.Text;
 
+            ATMWindow.Visibility = Visibility.Visible;
+            LoginWindow.Visibility = Visibility.Collapsed;
+        }
     }
 }
