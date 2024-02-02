@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
@@ -119,16 +120,23 @@ public class DataBaseSQL
     public string GetName(int id)
     {
         Open();
+
         _command.CommandText = "SELECT name FROM ATM WHERE id = @id;";
         SQLiteDataReader rdr = _command.ExecuteReader();
+
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        idParam.Value = id;
+        _command.Parameters.Add(idParam);
 
         string name = null;
 
         while (rdr.Read())
         {
-            name = rdr.GetString(1);
+            name = rdr.GetString(0);
         }
         Close();
+
+        rdr.Close();
 
         return name;
     }
