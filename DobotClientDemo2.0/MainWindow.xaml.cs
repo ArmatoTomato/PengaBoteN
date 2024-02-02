@@ -688,10 +688,12 @@ namespace DobotClientDemo
         {
             int ID = int.Parse(IDTextBox.Text);
             string name = NameTextBox.Text;
+            string password = PasswordTextBox.Text;
 
             string RetrievedName = db.GetName(ID);
+            string retrivedPassword = db.GetPassword(ID);
 
-            if (RetrievedName == name)
+            if (RetrievedName == name && retrivedPassword == password)
             {
                 ATMWindow.Visibility = Visibility.Visible;
                 LoginWindow.Visibility = Visibility.Collapsed;

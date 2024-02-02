@@ -118,15 +118,18 @@ public class DataBaseSQL
     }
 
     public string GetName(int id)
+        // för password borde kanske vara private 
     {
         Open();
+
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        idParam.Value = id;
+        _command.Parameters.Add(idParam); 
 
         _command.CommandText = "SELECT name FROM ATM WHERE id = @id;";
         SQLiteDataReader rdr = _command.ExecuteReader();
 
-        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
-        idParam.Value = id;
-        _command.Parameters.Add(idParam);
+      
 
         string name = null;
 
@@ -134,10 +137,37 @@ public class DataBaseSQL
         {
             name = rdr.GetString(0);
         }
-        Close();
 
         rdr.Close();
+        Close();
 
         return name;
+    }
+
+    public string GetPassword(int id)
+    // för password borde kanske vara private 
+    {
+        Open();
+
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        idParam.Value = id;
+        _command.Parameters.Add(idParam);
+
+        _command.CommandText = "SELECT password FROM ATM WHERE id = @id;";
+        SQLiteDataReader rdr = _command.ExecuteReader();
+
+
+
+        string password = null;
+
+        while (rdr.Read())
+        {
+            password = rdr.GetString(0);
+        }
+
+        rdr.Close();
+        Close();
+
+        return password;
     }
 }
