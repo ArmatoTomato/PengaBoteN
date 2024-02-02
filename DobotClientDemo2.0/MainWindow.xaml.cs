@@ -34,6 +34,7 @@ namespace DobotClientDemo
             db = new DataBaseSQL("ATM.db");
             db.CreateDataBase();
 
+            db.UpdateBalanceByID(200, 1);
 
             ///attach event handler to corresponding events
             InitializeComponent();

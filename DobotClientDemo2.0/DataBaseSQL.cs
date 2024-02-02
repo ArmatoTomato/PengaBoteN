@@ -49,7 +49,7 @@ public class DataBaseSQL
 
         try
         {
-            _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT);";
+            _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT, password TEXT);";
             _command.ExecuteNonQuery();
         }
         catch(Exception e)
@@ -58,8 +58,6 @@ public class DataBaseSQL
         }
         
         Close();
-
-        AddUser("Anton", 500);
     }
 
     public void WriteToFile(System.Exception e)
@@ -111,7 +109,6 @@ public class DataBaseSQL
 
         _command.Prepare();
         _command.ExecuteNonQuery();
-
         Close();
 
         return true;
@@ -171,3 +168,29 @@ public class DataBaseSQL
         return password;
     }
 }
+
+    public void UpdateBalanceByID(int balance, int id)
+    {
+        Open();
+        _command.CommandText = "UPDATE ATM SET balance = @balance WHERE id = @id;";
+
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        SQLiteParameter balanceParam = new SQLiteParameter("@balance", System.Data.DbType.Int32);
+        //SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
+
+        idParam.Value = id;
+        balanceParam.Value = balance;
+        //nameParam.Value = name;
+
+        _command.Parameters.Add(idParam);
+        _command.Parameters.Add(balanceParam);
+        //_command.Parameters.Add(nameParam);
+
+        _command.Prepare();
+        _command.ExecuteNonQuery();
+        Close();
+    }
+}
+
+
+//GUID - 
