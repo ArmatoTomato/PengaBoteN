@@ -115,4 +115,21 @@ public class DataBaseSQL
 
         return true;
     }
+
+    public string GetName(int id)
+    {
+        Open();
+        _command.CommandText = "SELECT name FROM ATM WHERE id = @id;";
+        SQLiteDataReader rdr = _command.ExecuteReader();
+
+        string name = null;
+
+        while (rdr.Read())
+        {
+            name = rdr.GetString(1);
+        }
+        Close();
+
+        return name;
+    }
 }

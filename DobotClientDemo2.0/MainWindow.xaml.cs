@@ -27,10 +27,10 @@ namespace DobotClientDemo
         private JogCmd currentCmd;
         private Pose pose = new Pose();
         private System.Timers.Timer posTimer = new System.Timers.Timer();
-
+        DataBaseSQL db;
         public MainWindow()
         {
-            DataBaseSQL db;
+
             db = new DataBaseSQL("ATM.db");
             db.CreateDataBase();
 
@@ -686,11 +686,16 @@ namespace DobotClientDemo
 
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
-            string ID = IDTextBox.Text;
+            int ID = int.Parse(IDTextBox.Text);
             string name = NameTextBox.Text;
 
-            ATMWindow.Visibility = Visibility.Visible;
-            LoginWindow.Visibility = Visibility.Collapsed;
+            string RetrievedName = db.GetName(ID);
+
+            if (RetrievedName == name)
+            {
+                ATMWindow.Visibility = Visibility.Visible;
+                LoginWindow.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
