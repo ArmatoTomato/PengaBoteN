@@ -33,9 +33,12 @@ namespace DobotClientDemo
 
             db = new DataBaseSQL("ATM.db");
             db.CreateDataBase();
-
+            db.AddUser("Alva", 2, "alva123");
             db.UpdateBalanceByID(200, 1);
 
+            EncryptionList<string> nd;
+            nd = new EncryptionList<string>();
+            //List<string> oga = nd.Encrypt("ALva");
             ///attach event handler to corresponding events
             InitializeComponent();
             
@@ -700,5 +703,36 @@ namespace DobotClientDemo
                 LoginWindow.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void CreateAccount_Click(object sender, EventArgs e)
+        {
+            CreateAccountWindow.Visibility = Visibility.Visible;
+        }
+        private void CreateAccountCreate_Click(object sender, EventArgs e)
+        {
+            string name = NameTextBoxCreate.Text;
+            string password = PasswordTextBoxCreate.Text;
+
+            try
+            {
+
+                if (password != "" && name != "")
+                {
+                    BankManager user = new BankManager();
+                    user.CreateAccount(name, 2, password);
+
+                    NameTextBoxCreate.Clear();
+                    PasswordTextBoxCreate.Clear();
+                }
+                ATMWindow.Visibility = Visibility.Visible;
+                CreateAccountWindow.Visibility = Visibility.Collapsed;
+
+            }
+            finally
+            {
+
+            }
+        }
+
     }
 }

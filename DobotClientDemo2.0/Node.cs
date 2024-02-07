@@ -75,45 +75,48 @@ namespace DobotClientDemo
 
             return rowsInFile;
         }
-        private void Encrypt()
-        {
-            Node<T> temp = _first;
-            List<string> Password_BoxList = new List<string>();
+        //public List<string> Encrypt(string x)
+        //{
+        //    Node<T> temp = _first;
+        //    List<string> PasswordList = new List<string>();
 
-            int i = 0;
+        //    char[] test = x.ToCharArray();
 
-            if (Password_Box.Text != "")
-            {
-                while (temp._next != null)
-                {
-                    if ((string)(Convert.ChangeType(temp, typeof(string))) == Password_BoxList[i])
-                    {
-                        PasswordList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
-                        i++;
-                    }
-                    temp = temp._next;
-                }
-            }
-        }
+        //    int i = 0;
 
-        private void Decrypt()
-        {
-            List<string> PasswordList = db.GetPassword().Split(",").ToList();
-            List<string> DecryptedList = new List<string>();
-            Node<T> temp = _first;
+        //    if ((string)(Convert.ChangeType(test, typeof(string)) != "")
+        //    {
+        //        while (temp._next != null)
+        //        {
+        //            if ((string)(Convert.ChangeType(temp, typeof(string))) == test[i])
+        //            {
+        //                PasswordList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
+        //                i++;
+        //            }
+        //            temp = temp._next;
+        //        }
+        //    }
+        //    return PasswordList;
+        //}
 
-            int i = 0;
+        //private void Decrypt()
+        //{
+        //    List<string> PasswordList = db.GetPassword().Split(",").ToList();
+        //    List<string> DecryptedList = new List<string>();
+        //    Node<T> temp = _first;
 
-            while (temp._next != null)
-            {
-                if ((string)(Convert.ChangeType(temp._next, typeof(string))) == PasswordList[i])
-                {
-                    DecryptedList.Add((string)(Convert.ChangeType(temp, typeof(string))));
-                    i++;                    
-                }
-                temp = temp._next;
-            }
-        }
+        //    int i = 0;
+
+        //    while (temp._next != null)
+        //    {
+        //        if ((string)(Convert.ChangeType(temp._next, typeof(string))) == PasswordList[i])
+        //        {
+        //            DecryptedList.Add((string)(Convert.ChangeType(temp, typeof(string))));
+        //            i++;
+        //        }
+        //        temp = temp._next;
+        //    }
+        //}
 
         //Ladda in löseord från SQL
         //Gör om string till lista
