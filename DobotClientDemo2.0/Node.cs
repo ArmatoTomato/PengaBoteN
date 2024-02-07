@@ -30,20 +30,31 @@ namespace DobotClientDemo
         DataBaseSQL db;
 
         public static Node<T> _first = null;
+        public static Node<T> _last = null;
+
 
         public static void AddLast(T data)
         {
+            Node<T> newNode = new Node<T>(data);
             if (_first == null)
             {
-                _first = new Node<T>(data);
+                _first = newNode;
+                _last = newNode;
+            }
+            else
+            {
+                _last._next = newNode;
+                newNode._prev = _last;
+                _last = newNode;
             }
 
-            Node<T> temp = _first;
-            while (temp._next != null)
-            {
-                temp = temp._next;
-            }
-            temp._next = new Node<T>(data);
+            //Node<T> temp = _first;
+            //while (temp._next != null)
+            //{
+            //    temp = temp._next;
+            //}
+            //temp._next = new Node<T>(data);
+
         }
 
         public static List<string> ReadFile()
@@ -75,51 +86,48 @@ namespace DobotClientDemo
 
             return rowsInFile;
         }
-        //public List<string> Encrypt(string x)
-        //{
-        //    Node<T> temp = _first;
-        //    List<string> PasswordList = new List<string>();
+        public List<string> Encrypt(string password)
+        {
+            ReadFile();
+            Node<T> temp = _first;
+            List<string> PasswordList = new List<string>();
 
-        //    char[] test = x.ToCharArray();
+            char[] test = password.ToCharArray();
 
-        //    int i = 0;
+            int i = 0;
 
-        //    if ((string)(Convert.ChangeType(test, typeof(string)) != "")
-        //    {
-        //        while (temp._next != null)
-        //        {
-        //            if ((string)(Convert.ChangeType(temp, typeof(string))) == test[i])
-        //            {
-        //                PasswordList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
-        //                i++;
-        //            }
-        //            temp = temp._next;
-        //        }
-        //    }
-        //    return PasswordList;
-        //}
+            while ((string)(Convert.ChangeType(temp, typeof(string))) != test[i].ToString())
+            {
+                if ((string)(Convert.ChangeType(temp, typeof(string))) == test[i].ToString())
+                {
+                    PasswordList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
+                    i++;
+                }
+                temp = temp._next;
+            }
 
-        //private void Decrypt()
-        //{
-        //    List<string> PasswordList = db.GetPassword().Split(",").ToList();
-        //    List<string> DecryptedList = new List<string>();
-        //    Node<T> temp = _first;
+            return PasswordList;
+        }
 
-        //    int i = 0;
+        public void Decrypt(int id)
+        {
+            string password = db.GetPassword(id);
+            List<string> DecryptedList = new List<string>();
 
-        //    while (temp._next != null)
-        //    {
-        //        if ((string)(Convert.ChangeType(temp._next, typeof(string))) == PasswordList[i])
-        //        {
-        //            DecryptedList.Add((string)(Convert.ChangeType(temp, typeof(string))));
-        //            i++;
-        //        }
-        //        temp = temp._next;
-        //    }
-        //}
+            char[] test = password.ToCharArray();
+            Node<T> temp = _first;
 
-        //Ladda in löseord från SQL
-        //Gör om string till lista
-        //Allt i små bokstäver
+            int i = 0;
+
+            while ((string)(Convert.ChangeType(temp, typeof(string))) != test[i].ToString())
+            {
+                if ((string)(Convert.ChangeType(temp, typeof(string))) != test[i].ToString())
+                {
+                    DecryptedList.Add((string)(Convert.ChangeType(temp._prev, typeof(string))));
+                    i++;
+                }
+                temp = temp._next;
+            }
+        }
     }
 }

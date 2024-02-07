@@ -719,8 +719,10 @@ namespace DobotClientDemo
                 if (password != "" && name != "")
                 {
                     BankManager user = new BankManager();
-                    user.CreateAccount(name, 2, password);
-
+                    EncryptionList<string> n = new EncryptionList<string>();
+                    string encryptedPassword = n.Encrypt(password).ToString();
+                    user.CreateAccount(name, 2, encryptedPassword);
+                   
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();
                 }
