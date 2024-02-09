@@ -57,9 +57,9 @@ namespace DobotClientDemo
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            StartGetPose();
+            //StartGetPose();
 
-            StartDobot();
+            //StartDobot();
         }
 
         /// <summary>
@@ -707,6 +707,7 @@ namespace DobotClientDemo
         private void CreateAccount_Click(object sender, EventArgs e)
         {
             CreateAccountWindow.Visibility = Visibility.Visible;
+            LoginWindow.Visibility = Visibility.Collapsed;
         }
         private void CreateAccountCreate_Click(object sender, EventArgs e)
         {
@@ -728,7 +729,6 @@ namespace DobotClientDemo
                 }
                 ATMWindow.Visibility = Visibility.Visible;
                 CreateAccountWindow.Visibility = Visibility.Collapsed;
-
             }
             finally
             {

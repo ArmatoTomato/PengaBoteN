@@ -61,9 +61,10 @@ namespace DobotClientDemo
         {
             List<string> rowsInFile = new List<string>();
             string line;
+
             try
             {
-                StreamReader sr = new StreamReader("Encryption");
+                StreamReader sr = new StreamReader("Encryption.txt");
 
                 line = sr.ReadLine();
 
@@ -92,16 +93,19 @@ namespace DobotClientDemo
             Node<T> temp = _first;
             List<string> PasswordList = new List<string>();
 
-            char[] test = password.ToCharArray();
+            string smallPassword = password.ToLower();
 
             int i = 0;
+            char[] test = smallPassword.ToCharArray();
+            int s = test.GetLength(0);
 
-            while ((string)(Convert.ChangeType(temp, typeof(string))) != test[i].ToString())
+            while (i != s)
             {
-                if ((string)(Convert.ChangeType(temp, typeof(string))) == test[i].ToString())
+                if (temp._data.ToString() == test[i].ToString())
                 {
-                    PasswordList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
+                    PasswordList.Add(temp._next._data.ToString());
                     i++;
+                    temp = _first;
                 }
                 temp = temp._next;
             }
@@ -115,16 +119,18 @@ namespace DobotClientDemo
             List<string> DecryptedList = new List<string>();
 
             char[] test = password.ToCharArray();
+            int s = test.GetLength(0);
             Node<T> temp = _first;
 
             int i = 0;
 
-            while ((string)(Convert.ChangeType(temp, typeof(string))) != test[i].ToString())
+            while (i != s)
             {
-                if ((string)(Convert.ChangeType(temp, typeof(string))) != test[i].ToString())
+                if (temp._data.ToString() != test[i].ToString())
                 {
-                    DecryptedList.Add((string)(Convert.ChangeType(temp._prev, typeof(string))));
+                    DecryptedList.Add(temp._prev._data.ToString());
                     i++;
+                    temp = _first;
                 }
                 temp = temp._next;
             }
