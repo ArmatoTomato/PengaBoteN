@@ -33,7 +33,6 @@ namespace DobotClientDemo
 
             db = new DataBaseSQL("ATM.db");
             db.CreateDataBase();
-            db.AddUser("Alva", 2, "alva123");
             db.UpdateBalanceByID(200, 1);
 
             EncryptionList<string> nd;
@@ -695,7 +694,9 @@ namespace DobotClientDemo
             string password = PasswordTextBox.Text;
 
             string RetrievedName = db.GetName(ID);
-            string retrivedPassword = db.GetPassword(ID);
+
+            EncryptionList<string> n = new EncryptionList<string>();
+            string retrivedPassword = n.Decrypt(ID);
 
             if (RetrievedName == name && retrivedPassword == password)
             {
@@ -721,8 +722,10 @@ namespace DobotClientDemo
                 {
                     BankManager user = new BankManager();
                     EncryptionList<string> n = new EncryptionList<string>();
-                    string encryptedPassword = n.Encrypt(password).ToString();
-                    user.CreateAccount(name, 2, encryptedPassword);
+                    List<string> encryptedPassword = n.Encrypt(password.ToLower());
+                    encryptedPassword.ToString().Trim();
+                    string test = string.Join("", encryptedPassword.ToArray());
+                    user.CreateAccount(name, 2, test);
                    
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();

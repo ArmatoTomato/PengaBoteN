@@ -32,7 +32,6 @@ namespace DobotClientDemo
         public static Node<T> _first = null;
         public static Node<T> _last = null;
 
-
         public static void AddLast(T data)
         {
             Node<T> newNode = new Node<T>(data);
@@ -54,7 +53,6 @@ namespace DobotClientDemo
             //    temp = temp._next;
             //}
             //temp._next = new Node<T>(data);
-
         }
 
         public static List<string> ReadFile()
@@ -72,6 +70,7 @@ namespace DobotClientDemo
                 {
                     AddLast((T)(Convert.ChangeType(line, typeof(T))));
                     line = sr.ReadLine();
+                    rowsInFile.Add(line);
                 }
 
                 sr.Close();
@@ -113,20 +112,29 @@ namespace DobotClientDemo
             return PasswordList;
         }
 
-        public void Decrypt(int id)
+        public string Decrypt(int id)
         {
+            db = new DataBaseSQL("ATM.db");
+
             string password = db.GetPassword(id);
             List<string> DecryptedList = new List<string>();
-
             char[] test = password.ToCharArray();
             int s = test.GetLength(0);
+
+            ReadFile();
             Node<T> temp = _first;
+
+            //for (int ia = 0; ia < test.GetLength(0);)
+            //{
+            //    temp = AddLast((T)(Convert.ChangeType(test[ia], typeof(T))));
+            //    ia++;
+            //}
 
             int i = 0;
 
             while (i != s)
             {
-                if (temp._data.ToString() != test[i].ToString())
+                if (temp._data.ToString() == test[i].ToString())
                 {
                     DecryptedList.Add(temp._prev._data.ToString());
                     i++;
@@ -134,6 +142,11 @@ namespace DobotClientDemo
                 }
                 temp = temp._next;
             }
+
+            DecryptedList.ToString().Trim();
+            string decryptedPassword = string.Join("", DecryptedList.ToArray());
+
+            return decryptedPassword;
         }
     }
 }
