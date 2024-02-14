@@ -317,4 +317,21 @@ namespace DobotClientDemo.CPlusDll
         DobotCommunicate_Timeout,
         DobotCommunicate_InvalidParams
     };
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    public struct EMotor
+    {
+        public byte index;
+        public byte isEnabled;
+        public UInt32 speed;
+    };
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    public struct EMotorS
+    {
+        public byte index;
+        public byte isEnabled;
+        public Int32 speed;
+        public UInt32 distance;
+    };
 }

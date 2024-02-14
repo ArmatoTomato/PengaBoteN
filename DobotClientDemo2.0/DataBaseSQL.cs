@@ -167,7 +167,6 @@ public class DataBaseSQL
 
         return password;
     }
-}
 
     public void UpdateBalanceByID(int balance, int id)
     {
@@ -192,5 +191,8 @@ public class DataBaseSQL
     }
 }
 
+
+
+    
 
 //GUID - 
