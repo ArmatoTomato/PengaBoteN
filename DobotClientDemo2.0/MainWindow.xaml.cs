@@ -705,6 +705,11 @@ namespace DobotClientDemo
             }
         }
 
+        private void Back_Click(object sender, EventArgs e)
+        {
+            CreateAccountWindow.Visibility = Visibility.Collapsed;
+            LoginWindow.Visibility = Visibility.Visible;
+        }
         private void CreateAccount_Click(object sender, EventArgs e)
         {
             CreateAccountWindow.Visibility = Visibility.Visible;
