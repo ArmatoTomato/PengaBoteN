@@ -13,6 +13,7 @@
         <StackPanel x:Name="ATMWindow" Visibility ="Collapsed" Grid.Row="1" Width=" 620" Margin="0,0,0,0" Grid.RowSpan="2">
 
             <Button Content="Withdraw" Height="40" Margin="0,0,0,10" Click="ButtonWithdraw_Click" Grid.Row="2"/>
+            <TextBox x:Name="WithdrawAmount" TextWrapping="Wrap" Text="Amount" Width="500" Height="30"/>
             <Button Content="Deposit"  Height="40" Click="ButtonDeposit_Click" Grid.Row="2"/>
 
         </StackPanel>

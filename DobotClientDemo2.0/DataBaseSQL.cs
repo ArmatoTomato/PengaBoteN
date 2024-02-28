@@ -138,7 +138,29 @@ public class DataBaseSQL
         _command.ExecuteNonQuery();
         Close();
     }
+    public int GetBalance(int id)
+    {
+        Open();
 
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        idParam.Value = id;
+        _command.Parameters.Add(idParam);
+
+        _command.CommandText = "SELECT balance FROM ATM WHERE id = @id;";
+        SQLiteDataReader rdr = _command.ExecuteReader();
+
+        int balance = 0;
+
+        while (rdr.Read())
+        {
+            balance = rdr.GetInt32(0);
+        }
+
+        rdr.Close();
+        Close();
+
+        return balance;
+    }
     public string GetName(int id)
         // för password borde kanske vara private 
     {
