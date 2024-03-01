@@ -174,5 +174,10 @@ namespace DobotClientDemo.CPlusDll
         public static extern int GetARCParams(ref ARCParams arcParams);
         [DllImport("DobotDll.dll", EntryPoint = "SetARCCmd", CallingConvention = CallingConvention.Cdecl)]
         public static extern int SetARCCmd(ref ARCCmd arcCmd, bool isQueued, ref UInt64 queuedCmdIndex);
+
+        [DllImport("DobotDll.dll", EntryPoint = "SetEMotor", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SetEMotor(ref EMotor eMotor, bool isQueued, ref UInt64 queuedCmdIndex);
+        [DllImport("DobotDll.dll", EntryPoint = "SetEMotorS", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SetEMotorS(ref EMotorS eMotorS, bool isQueued, ref UInt64 queuedCmdIndex);
     }
 }
