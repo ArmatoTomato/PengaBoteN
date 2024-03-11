@@ -93,19 +93,22 @@ public class DataBaseSQL
         Close();
     }
 
-    public bool AddUser(string name, int balance)
+    public bool AddUser(string name, int balance, string password)
     {
         Open();
-        _command.CommandText = "INSERT INTO ATM (name, balance) VALUES (@name, @balance);";
+        _command.CommandText = "INSERT INTO ATM (name, balance, password) VALUES (@name, @balance, @password);";
 
         SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
         SQLiteParameter balanceParam = new SQLiteParameter("@balance", System.Data.DbType.Int32);
+        SQLiteParameter passwordParam = new SQLiteParameter("@password", System.Data.DbType.String);
 
         nameParam.Value = name;
         balanceParam.Value = balance;
+        passwordParam.Value = password;
 
         _command.Parameters.Add(nameParam);
         _command.Parameters.Add(balanceParam);
+        _command.Parameters.Add(passwordParam);
 
         _command.Prepare();
         _command.ExecuteNonQuery();
@@ -114,6 +117,50 @@ public class DataBaseSQL
         return true;
     }
 
+    public void UpdateBalanceByID(int balance, int id)
+    {
+        Open();
+        _command.CommandText = "UPDATE ATM SET balance = @balance WHERE id = @id;";
+
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        SQLiteParameter balanceParam = new SQLiteParameter("@balance", System.Data.DbType.Int32);
+        //SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
+
+        idParam.Value = id;
+        balanceParam.Value = balance;
+        //nameParam.Value = name;
+
+        _command.Parameters.Add(idParam);
+        _command.Parameters.Add(balanceParam);
+        //_command.Parameters.Add(nameParam);
+
+        _command.Prepare();
+        _command.ExecuteNonQuery();
+        Close();
+    }
+    public int GetBalance(int id)
+    {
+        Open();
+
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        idParam.Value = id;
+        _command.Parameters.Add(idParam);
+
+        _command.CommandText = "SELECT balance FROM ATM WHERE id = @id;";
+        SQLiteDataReader rdr = _command.ExecuteReader();
+
+        int balance = 0;
+
+        while (rdr.Read())
+        {
+            balance = rdr.GetInt32(0);
+        }
+
+        rdr.Close();
+        Close();
+
+        return balance;
+    }
     public string GetName(int id)
         // för password borde kanske vara private 
     {
@@ -167,29 +214,6 @@ public class DataBaseSQL
 
         return password;
     }
-
-    public void UpdateBalanceByID(int balance, int id)
-    {
-        Open();
-        _command.CommandText = "UPDATE ATM SET balance = @balance WHERE id = @id;";
-
-        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
-        SQLiteParameter balanceParam = new SQLiteParameter("@balance", System.Data.DbType.Int32);
-        //SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
-
-        idParam.Value = id;
-        balanceParam.Value = balance;
-        //nameParam.Value = name;
-
-        _command.Parameters.Add(idParam);
-        _command.Parameters.Add(balanceParam);
-        //_command.Parameters.Add(nameParam);
-
-        _command.Prepare();
-        _command.ExecuteNonQuery();
-        Close();
-    }
-}
 
 
 

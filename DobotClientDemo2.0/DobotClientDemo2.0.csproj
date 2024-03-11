@@ -77,6 +77,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Dobot.cs" />
+    <Compile Include="BankManager.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="User.cs" />
     <Page Include="MainWindow.xaml">

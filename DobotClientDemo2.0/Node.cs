@@ -30,29 +30,39 @@ namespace DobotClientDemo
         DataBaseSQL db;
 
         public static Node<T> _first = null;
+        public static Node<T> _last = null;
 
         public static void AddLast(T data)
         {
+            Node<T> newNode = new Node<T>(data);
             if (_first == null)
             {
-                _first = new Node<T>(data);
+                _first = newNode;
+                _last = newNode;
+            }
+            else
+            {
+                _last._next = newNode;
+                newNode._prev = _last;
+                _last = newNode;
             }
 
-            Node<T> temp = _first;
-            while (temp._next != null)
-            {
-                temp = temp._next;
-            }
-            temp._next = new Node<T>(data);
+            //Node<T> temp = _first;
+            //while (temp._next != null)
+            //{
+            //    temp = temp._next;
+            //}
+            //temp._next = new Node<T>(data);
         }
 
         public static List<string> ReadFile()
         {
             List<string> rowsInFile = new List<string>();
             string line;
+
             try
             {
-                StreamReader sr = new StreamReader("Encryption");
+                StreamReader sr = new StreamReader("Encryption.txt");
 
                 line = sr.ReadLine();
 
@@ -60,6 +70,7 @@ namespace DobotClientDemo
                 {
                     AddLast((T)(Convert.ChangeType(line, typeof(T))));
                     line = sr.ReadLine();
+                    rowsInFile.Add(line);
                 }
 
                 sr.Close();
@@ -75,48 +86,67 @@ namespace DobotClientDemo
 
             return rowsInFile;
         }
-        //private void Encrypt()
-        //{
-        //    Node<T> temp = _first;
-        //    List<string> Password_BoxList = new List<string>();
+        public List<string> Encrypt(string password)
+        {
+            ReadFile();
+            Node<T> temp = _first;
+            List<string> PasswordList = new List<string>();
 
-        //    int i = 0;
+            string smallPassword = password.ToLower();
 
-        //    if (Password_Box.Text != "")
-        //    {
-        //        while (temp._next != null)
-        //        {
-        //            if ((string)(Convert.ChangeType(temp, typeof(string))) == Password_BoxList[i])
-        //            {
-        //                PasswordList.Add((string)(Convert.ChangeType(temp._next, typeof(string))));
-        //                i++;
-        //            }
-        //            temp = temp._next;
-        //        }
-        //    }
-        //}
+            int i = 0;
+            char[] test = smallPassword.ToCharArray();
+            int s = test.GetLength(0);
 
-        //private void Decrypt()
-        //{
-        //    List<string> PasswordList = db.GetPassword().Split(",").ToList();
-        //    List<string> DecryptedList = new List<string>();
-        //    Node<T> temp = _first;
+            while (i != s)
+            {
+                if (temp._data.ToString() == test[i].ToString())
+                {
+                    PasswordList.Add(temp._next._data.ToString());
+                    i++;
+                    temp = _first;
+                }
+                temp = temp._next;
+            }
 
-        //    int i = 0;
+            return PasswordList;
+        }
 
-        //    while (temp._next != null)
-        //    {
-        //        if ((string)(Convert.ChangeType(temp._next, typeof(string))) == PasswordList[i])
-        //        {
-        //            DecryptedList.Add((string)(Convert.ChangeType(temp, typeof(string))));
-        //            i++;                    
-        //        }
-        //        temp = temp._next;
-        //    }
-        //}
+        public string Decrypt(int id)
+        {
+            db = new DataBaseSQL("ATM.db");
 
-        //Ladda in löseord från SQL
-        //Gör om string till lista
-        //Allt i små bokstäver
+            string password = db.GetPassword(id);
+            List<string> DecryptedList = new List<string>();
+            char[] test = password.ToCharArray();
+            int s = test.GetLength(0);
+
+            ReadFile();
+            Node<T> temp = _first;
+
+            //for (int ia = 0; ia < test.GetLength(0);)
+            //{
+            //    temp = AddLast((T)(Convert.ChangeType(test[ia], typeof(T))));
+            //    ia++;
+            //}
+
+            int i = 0;
+
+            while (i != s)
+            {
+                if (temp._data.ToString() == test[i].ToString())
+                {
+                    DecryptedList.Add(temp._prev._data.ToString());
+                    i++;
+                    temp = _first;
+                }
+                temp = temp._next;
+            }
+
+            DecryptedList.ToString().Trim();
+            string decryptedPassword = string.Join("", DecryptedList.ToArray());
+
+            return decryptedPassword;
+        }
     }
 }

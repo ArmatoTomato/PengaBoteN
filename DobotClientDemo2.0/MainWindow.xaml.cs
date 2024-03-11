@@ -1,19 +1,13 @@
-﻿using System;
+﻿using DobotClientDemo.CPlusDll;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using DobotClientDemo.CPlusDll;
 
 
 namespace DobotClientDemo
@@ -34,16 +28,18 @@ namespace DobotClientDemo
 
         private System.Timers.Timer posTimer = new System.Timers.Timer();
         DataBaseSQL db;
-
-
-
+        BankManager bm;
+        int ID { get; set; }
         public MainWindow()
         {
             db = new DataBaseSQL("ATM.db");
             db.CreateDataBase();
-
             db.UpdateBalanceByID(200, 1);
+            bm = new BankManager();
 
+            EncryptionList<string> nd;
+            nd = new EncryptionList<string>();
+            //List<string> oga = nd.Encrypt("ALva");
             ///attach event handler to corresponding events
             InitializeComponent();
             
@@ -65,8 +61,9 @@ namespace DobotClientDemo
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            StartGetPose();
+            //StartGetPose();
 
+            //StartDobot();
             StartDobot();
 
         }
@@ -630,8 +627,7 @@ namespace DobotClientDemo
 
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
-
-
+            bm.InsertAmount(ID, int.Parse(WithdrawAmount.Text));
             if (!isConnectted)
                 return;
 
@@ -641,6 +637,29 @@ namespace DobotClientDemo
             DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
 
             DobotDll.SetQueuedCmdStartExec();
+            UInt64 temp = cmdIndex;
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+            z = 13;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
+
+            x = 260;
+            y = -190;
+            z = 25;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+            z = 13;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(false, false, true, ref cmdIndex);
+
+            while (temp < cmdIndex)
+                DobotDll.GetQueuedCmdCurrentIndex(ref temp);
+            //loopen krävs för att säkerställa att alla komandon får sina rätta index och att de hamnar i kön och utförs korrekt
+            DobotDll.SetQueuedCmdStopExec();
             dobot.Deposit(ref cmdIndex);
            
         }
@@ -648,25 +667,83 @@ namespace DobotClientDemo
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
 
-            if (!isConnectted)
-                return;
+            bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
+            if(chekAmount == true)
+            {
+                if (!isConnectted)
+                    return;
 
-            Button obj = (Button)sender;
-            String con = obj.Content.ToString();
-            UInt64 cmdIndex = 0;
-            DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
+                Button obj = (Button)sender;
+                String con = obj.Content.ToString();
+                UInt64 cmdIndex = 0;
+                DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
 
+            float x, y, z;
+
+            x = 260;
+            y = -190;
+            z = 13;
+
+            DobotDll.SetQueuedCmdStartExec();
+            UInt64 temp = cmdIndex;
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+            DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
+
+            z = 25;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+            x = 260;
+            y = 0;
+            z = 25;
+
+                cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+            z = 13;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+            DobotDll.SetEndEffectorSuctionCup(false, false, true, ref cmdIndex);
+
+
+            z = 25;
+
+            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+            double STEP_PER_CRICLE = 360.0 / 1.8 * 10.0 * 16.0;
+            double MM_PER_CRICLE = 3.1415926535898 * 36.0;
+            UInt32 dist = (uint)(25 * STEP_PER_CRICLE / MM_PER_CRICLE);
+
+            EMotorS motor = new EMotorS();
+            motor.index = 0;
+            motor.isEnabled = 1;
+            motor.speed = 9000;
+            motor.distance = dist;
+            int s = DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+
+            motor.isEnabled = 0;
+            DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+
+
+
+                while (temp < cmdIndex)
+                    DobotDll.GetQueuedCmdCurrentIndex(ref temp);
+                DobotDll.SetQueuedCmdStopExec();
+            }
+        }
             dobot.Withdraw(ref cmdIndex);
         }
 
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
-            int ID = int.Parse(IDTextBox.Text);
+            ID = int.Parse(IDTextBox.Text);
             string name = NameTextBox.Text;
             string password = PasswordTextBox.Text;
 
             string RetrievedName = db.GetName(ID);
-            //string retrivedPassword = db.GetPassword(ID);
+
+            EncryptionList<string> n = new EncryptionList<string>();
+            string retrivedPassword = n.Decrypt(ID);
 
             if (RetrievedName == name)
             {
@@ -684,6 +761,48 @@ namespace DobotClientDemo
             catch(Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+        }
+            ((TextBox)sender).Text = "";
+            }
+        }
+
+        private void Back_Click(object sender, EventArgs e)
+        {
+            CreateAccountWindow.Visibility = Visibility.Collapsed;
+            LoginWindow.Visibility = Visibility.Visible;
+        }
+        private void CreateAccount_Click(object sender, EventArgs e)
+        {
+            CreateAccountWindow.Visibility = Visibility.Visible;
+            LoginWindow.Visibility = Visibility.Collapsed;
+        }
+        private void CreateAccountCreate_Click(object sender, EventArgs e)
+        {
+            string name = NameTextBoxCreate.Text;
+            string password = PasswordTextBoxCreate.Text;
+
+            try
+            {
+
+                if (password != "" && name != "")
+                {
+                    BankManager user = new BankManager();
+                    EncryptionList<string> n = new EncryptionList<string>();
+                    List<string> encryptedPassword = n.Encrypt(password.ToLower());
+                    encryptedPassword.ToString().Trim();
+                    string test = string.Join("", encryptedPassword.ToArray());
+                    user.CreateAccount(name, 0, test);
+                   
+                    NameTextBoxCreate.Clear();
+                    PasswordTextBoxCreate.Clear();
+                }
+                ATMWindow.Visibility = Visibility.Visible;
+                CreateAccountWindow.Visibility = Visibility.Collapsed;
+            }
+            finally
+            {
+
             }
         }
 

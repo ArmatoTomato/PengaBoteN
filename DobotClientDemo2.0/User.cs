@@ -27,15 +27,9 @@ namespace DobotClientDemo
 
         }
 
-        //public void CreateAccount()
+        //public void CreateAccount(string name, string password)
         //{
-        //    if (Name_Box.Text != "" && Password_Box.Text != "")
-        //    {
-        //           db.AddStudentToStudentTable(Name_Box.Text, age, SurName_Box.Text);
-
-        //           Name_Box.Clear();
-        //           Password_Box.Clear();
-        //    }
+        //    db.AddStudentToStudentTable(name, password);
         //}
 
     }
