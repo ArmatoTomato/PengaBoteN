@@ -331,7 +331,7 @@ namespace DobotClientDemo.CPlusDll
     {
         public byte index;
         public byte isEnabled;
-        public Int32 speed;
+        public int speed;
         public UInt32 distance;
     };
 }
