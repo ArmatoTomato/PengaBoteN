@@ -1,11 +1,14 @@
 ﻿using DobotClientDemo.CPlusDll;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+
 
 namespace DobotClientDemo
 {
@@ -18,14 +21,17 @@ namespace DobotClientDemo
         private byte isJoint = (byte)0;
         private bool isConnectted = false;
         private JogCmd currentCmd;
+
         private Pose pose = new Pose();
+
+        Dobot dobot = new Dobot();
+
         private System.Timers.Timer posTimer = new System.Timers.Timer();
         DataBaseSQL db;
         BankManager bm;
         int ID { get; set; }
         public MainWindow()
         {
-
             db = new DataBaseSQL("ATM.db");
             db.CreateDataBase();
             db.UpdateBalanceByID(200, 1);
@@ -627,11 +633,6 @@ namespace DobotClientDemo
             UInt64 cmdIndex = 0;
             DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
 
-            float x, y, z, r;
-            
-            x = 260;
-            y = 0;
-            z = 25;
             DobotDll.SetQueuedCmdStartExec();
             UInt64 temp = cmdIndex;
             cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
@@ -656,6 +657,8 @@ namespace DobotClientDemo
                 DobotDll.GetQueuedCmdCurrentIndex(ref temp);
             //loopen krävs för att säkerställa att alla komandon får sina rätta index och att de hamnar i kön och utförs korrekt
             DobotDll.SetQueuedCmdStopExec();
+            dobot.Deposit(ref cmdIndex);
+           
         }
 
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
@@ -729,6 +732,8 @@ namespace DobotClientDemo
                 DobotDll.SetQueuedCmdStopExec();
             }
         }
+            dobot.Withdraw(ref cmdIndex);
+        }
 
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
@@ -748,9 +753,17 @@ namespace DobotClientDemo
             }
         }
 
-
-        private void TextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void IDTextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            //kolla om sender är textbox
+            try { 
+                ((TextBox)sender).Text = "";
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
             ((TextBox)sender).Text = "";
             
         }
@@ -795,10 +808,13 @@ namespace DobotClientDemo
         }
 
 
-        //private void DobotPoseOne(ref )
+        //private void Withdraw(ref UInt64 cmdIndex, Pose pose)
         //{
-
+        //    DobotGoToActionPose(1, cmdIndex, pose)
         //}
+
+
+
     }
 
 }
