@@ -616,9 +616,6 @@ namespace DobotClientDemo
             }
         }
 
-
-
-
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
             bm.InsertAmount(ID, int.Parse(WithdrawAmount.Text));
@@ -663,7 +660,6 @@ namespace DobotClientDemo
 
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
-
             bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
             if(chekAmount == true)
             {
@@ -675,54 +671,59 @@ namespace DobotClientDemo
                 UInt64 cmdIndex = 0;
                 DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
 
-            float x, y, z;
+                float x, y, z;
 
-            x = 260;
-            y = -190;
-            z = 13;
+                x = 260;
+                y = -190;
+                z = 13;
 
-            DobotDll.SetQueuedCmdStartExec();
-            UInt64 temp = cmdIndex;
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
-            DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
+                DobotDll.SetQueuedCmdStartExec();
+                UInt64 temp = cmdIndex;
+                cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+                DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
 
-            z = 25;
-
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
-
-            x = 260;
-            y = 0;
-            z = 25;
+                z = 25;
 
                 cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
 
-            z = 13;
+                x = 260;
+                y = 0;
+                z = 25;
 
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+                    cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
 
-            DobotDll.SetEndEffectorSuctionCup(false, false, true, ref cmdIndex);
+                z = 13;
 
+                cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
 
-            z = 25;
-
-            cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
-
-            double STEP_PER_CRICLE = 360.0 / 1.8 * 10.0 * 16.0;
-            double MM_PER_CRICLE = 3.1415926535898 * 36.0;
-            UInt32 dist = (uint)(25 * STEP_PER_CRICLE / MM_PER_CRICLE);
-
-            EMotorS motor = new EMotorS();
-            motor.index = 0;
-            motor.isEnabled = 1;
-            motor.speed = 9000;
-            motor.distance = dist;
-            int s = DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
-
-            motor.isEnabled = 0;
-            DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+                DobotDll.SetEndEffectorSuctionCup(false, false, true, ref cmdIndex);
 
 
+                z = 25;
 
+                cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, x, y, z, 100, cmdIndex);
+
+                double STEP_PER_CRICLE = 360.0 / 1.8 * 10.0 * 16.0;
+                double MM_PER_CRICLE = 3.1415926535898 * 36.0;
+                UInt32 dist = (uint)(25 * STEP_PER_CRICLE / MM_PER_CRICLE);
+
+                EMotorS motor = new EMotorS();
+                motor.index = 0;
+                motor.isEnabled = 1;
+                motor.speed = 9000;
+                motor.distance = 1000;
+                int s = DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+
+                motor.isEnabled = 0;
+                DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+
+                DobotDll.SetInfraredSensor(true, 1, 1);
+                int c = DobotDll.GetInfraredSensor(1, 1);
+
+                if(c == 1)
+                {
+                    motor.speed = 0;
+                }
                 while (temp < cmdIndex)
                     DobotDll.GetQueuedCmdCurrentIndex(ref temp);
                 DobotDll.SetQueuedCmdStopExec();
@@ -751,7 +752,7 @@ namespace DobotClientDemo
         private void TextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             ((TextBox)sender).Text = "";
-            }
+            
         }
 
         private void Back_Click(object sender, EventArgs e)
@@ -799,4 +800,5 @@ namespace DobotClientDemo
 
         //}
     }
+
 }

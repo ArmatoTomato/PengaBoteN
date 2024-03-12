@@ -17,7 +17,7 @@ public class DataBaseSQL
     SQLiteCommand _command;
 
     public DataBaseSQL(string databaseName)
-	{
+    {
         _database_name = databaseName;
         _connection_string = "URI=file:" + databaseName;
         _connection = new SQLiteConnection(_connection_string);
@@ -44,7 +44,7 @@ public class DataBaseSQL
 
     public void CreateDataBase()
     {
-        
+
         Open();
 
         try
@@ -52,11 +52,11 @@ public class DataBaseSQL
             _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT, password TEXT);";
             _command.ExecuteNonQuery();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             WriteToFile(e); //Kanske onödig men cool
         }
-        
+
         Close();
     }
 
@@ -162,18 +162,18 @@ public class DataBaseSQL
         return balance;
     }
     public string GetName(int id)
-        // för password borde kanske vara private 
+    // för password borde kanske vara private 
     {
         Open();
 
         SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
         idParam.Value = id;
-        _command.Parameters.Add(idParam); 
+        _command.Parameters.Add(idParam);
 
         _command.CommandText = "SELECT name FROM ATM WHERE id = @id;";
         SQLiteDataReader rdr = _command.ExecuteReader();
 
-      
+
 
         string name = null;
 
@@ -214,6 +214,7 @@ public class DataBaseSQL
 
         return password;
     }
+}
 
 
 
