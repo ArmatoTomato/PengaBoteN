@@ -74,6 +74,7 @@ namespace DobotClientDemo
             _error.SetValue(null, null);
             _InitializeStdOutError.Invoke(null, new object[] { true });
         }
+
         static void SetOutAndErrorNull()
         {
             Console.SetOut(TextWriter.Null);
