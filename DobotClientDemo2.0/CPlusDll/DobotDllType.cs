@@ -334,4 +334,5 @@ namespace DobotClientDemo.CPlusDll
         public int speed;
         public UInt32 distance;
     };
+
 }

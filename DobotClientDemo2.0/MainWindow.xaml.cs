@@ -622,9 +622,6 @@ namespace DobotClientDemo
             }
         }
 
-
-
-
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
             bm.InsertAmount(ID, int.Parse(WithdrawAmount.Text));
@@ -641,7 +638,6 @@ namespace DobotClientDemo
 
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
-
             bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
             if(chekAmount == true)
             {
@@ -737,4 +733,5 @@ namespace DobotClientDemo
 
 
     }
+
 }

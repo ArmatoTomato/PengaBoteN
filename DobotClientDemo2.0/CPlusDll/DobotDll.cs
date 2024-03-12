@@ -179,5 +179,11 @@ namespace DobotClientDemo.CPlusDll
         public static extern int SetEMotor(ref EMotor eMotor, bool isQueued, ref UInt64 queuedCmdIndex);
         [DllImport("DobotDll.dll", EntryPoint = "SetEMotorS", CallingConvention = CallingConvention.Cdecl)]
         public static extern int SetEMotorS(ref EMotorS eMotorS, bool isQueued, ref UInt64 queuedCmdIndex);
+
+        [DllImport("DobotDll.dll", EntryPoint = "SetInfraredSensor", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SetInfraredSensor(bool enable, int laser, byte version);
+
+        [DllImport("DobotDll.dll", EntryPoint = "GetInfraredSensor", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetInfraredSensor(int laser, byte   version);
     }
 }
