@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -666,7 +667,7 @@ namespace DobotClientDemo
             EncryptionList<string> n = new EncryptionList<string>();
             string retrivedPassword = n.Decrypt(ID);
 
-            if (RetrievedName == name)
+            if (RetrievedName == name && retrivedPassword == password.ToLower())
             {
                 ATMWindow.Visibility = Visibility.Visible;
                 LoginWindow.Visibility = Visibility.Collapsed;
@@ -702,7 +703,6 @@ namespace DobotClientDemo
 
             try
             {
-
                 if (password != "" && name != "")
                 {
                     BankManager user = new BankManager();
@@ -710,19 +710,24 @@ namespace DobotClientDemo
                     List<string> encryptedPassword = n.Encrypt(password.ToLower());
                     encryptedPassword.ToString().Trim();
                     string test = string.Join("", encryptedPassword.ToArray());
-                    user.CreateAccount(name, 0, test);
-                   
+                    string guid = Guid.NewGuid().ToString();
+                    user.CreateAccount(name, 0, test, guid);
+                    int id = db.GetId(guid);
+                    db.RemoveTemp(id);
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();
+
+                   ShowID.Text = id.ToString();
                 }
-                ATMWindow.Visibility = Visibility.Visible;
-                CreateAccountWindow.Visibility = Visibility.Collapsed;
+                //CreateAccountWindow.Visibility = Visibility.Collapsed;
+                //LoginWindow.Visibility = Visibility.Visible;
             }
             finally
             {
 
             }
         }
+     
 
 
         //private void Withdraw(ref UInt64 cmdIndex, Pose pose)

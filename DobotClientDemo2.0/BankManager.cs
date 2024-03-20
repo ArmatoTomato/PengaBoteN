@@ -10,10 +10,10 @@ namespace DobotClientDemo
     {
         DataBaseSQL db;
 
-        public void CreateAccount(string name, int balance, string password)
+        public void CreateAccount(string name, int balance, string password, string temp)
         {
             db = new DataBaseSQL("ATM.db");
-            db.AddUser(name, balance, password);
+            db.AddUser(name, balance, password, temp);
         }
         
         public bool ChekExistingAmount(int id, int amount)

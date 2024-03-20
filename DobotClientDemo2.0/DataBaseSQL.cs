@@ -49,7 +49,7 @@ public class DataBaseSQL
 
         try
         {
-            _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT, password TEXT);";
+            _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT, password TEXT, temp TEXT);";
             _command.ExecuteNonQuery();
         }
         catch (Exception e)
@@ -93,22 +93,25 @@ public class DataBaseSQL
         Close();
     }
 
-    public bool AddUser(string name, int balance, string password)
+    public bool AddUser(string name, int balance, string password, string temp)
     {
         Open();
-        _command.CommandText = "INSERT INTO ATM (name, balance, password) VALUES (@name, @balance, @password);";
+        _command.CommandText = "INSERT INTO ATM (name, balance, password, temp) VALUES (@name, @balance, @password, @temp);";
 
         SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
         SQLiteParameter balanceParam = new SQLiteParameter("@balance", System.Data.DbType.Int32);
         SQLiteParameter passwordParam = new SQLiteParameter("@password", System.Data.DbType.String);
+        SQLiteParameter tempParam = new SQLiteParameter("@temp", System.Data.DbType.String);
 
         nameParam.Value = name;
         balanceParam.Value = balance;
         passwordParam.Value = password;
+        tempParam.Value = temp;
 
         _command.Parameters.Add(nameParam);
         _command.Parameters.Add(balanceParam);
         _command.Parameters.Add(passwordParam);
+        _command.Parameters.Add(tempParam);
 
         _command.Prepare();
         _command.ExecuteNonQuery();
@@ -161,6 +164,41 @@ public class DataBaseSQL
 
         return balance;
     }
+
+    public int GetId(string temp)
+    {
+        Open();
+
+        SQLiteParameter tempParam = new SQLiteParameter("@temp", System.Data.DbType.String);
+        tempParam.Value = temp;
+        _command.Parameters.Add(tempParam);
+
+        _command.CommandText = "SELECT id FROM ATM WHERE temp = @temp;";
+        SQLiteDataReader rdr = _command.ExecuteReader();
+
+        int id = 0;
+        while (rdr.Read())
+        {
+            id = rdr.GetInt32(0);
+        }
+
+        rdr.Close();
+        Close();
+
+        return id;
+    }
+
+    public void RemoveTemp(int id)
+    {
+        Open();
+
+        SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        idParam.Value = id;
+        _command.Parameters.Add(idParam);
+
+        _command.CommandText = "REMOVE temp from ATM WHERE id = @id;";
+        Close();
+    }
     public string GetName(int id)
     // för password borde kanske vara private 
     {
@@ -172,8 +210,6 @@ public class DataBaseSQL
 
         _command.CommandText = "SELECT name FROM ATM WHERE id = @id;";
         SQLiteDataReader rdr = _command.ExecuteReader();
-
-
 
         string name = null;
 
