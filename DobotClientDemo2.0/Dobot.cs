@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Windows;
@@ -21,7 +22,7 @@ namespace DobotClientDemo
     internal class Dobot
     {
         private Pose pose = new Pose();
-
+        private int cubesInBank = 4;
 
         enum Position
         {
@@ -29,7 +30,9 @@ namespace DobotClientDemo
             sensor,
             neutral,
             upp,
-            ner
+            ner,
+            marken,
+            bandetV
         };
         enum ConveyerDirection
         {
@@ -56,13 +59,19 @@ namespace DobotClientDemo
             return cmdIndex;
         }
 
+        
+
         public void Withdraw(ref UInt64 cmdIndex)
         {
+            DobotGoToActionPose((int)Position.bandetV, ref cmdIndex, ref pose);
 
             DobotGoToActionPose((int)Position.fack, ref cmdIndex, ref pose);
-            DobotGoToActionPose((int)Position.ner, ref cmdIndex, ref pose);
+            DobotGoToActionPose((int)Position.marken, ref cmdIndex, ref pose);
             DobotPickUp(ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.upp, ref cmdIndex, ref pose);
+            cubesInBank = cubesInBank -  1;
+            DobotGoToActionPose((int)Position.bandetV, ref cmdIndex, ref pose);
+            DobotGoToActionPose((int)Position.neutral, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.sensor, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.ner, ref cmdIndex, ref pose);
             DobotDrop(ref cmdIndex, ref pose);
@@ -77,20 +86,19 @@ namespace DobotClientDemo
 
         public void Deposit(ref UInt64 cmdIndex)
         {
-
+            cubesInBank = cubesInBank + 1;
             DobotGoToActionPose((int)Position.sensor, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.ner, ref cmdIndex, ref pose);
             DobotPickUp(ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.upp, ref cmdIndex, ref pose);
+            DobotGoToActionPose((int)Position.neutral, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.fack, ref cmdIndex, ref pose);
             DobotMoveBand((int)ConveyerDirection.left, ref cmdIndex, ref pose);
-            DobotGoToActionPose((int)Position.ner, ref cmdIndex, ref pose);
+            DobotGoToActionPose((int)Position.marken, ref cmdIndex, ref pose);
             DobotDrop(ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.upp, ref cmdIndex, ref pose);
             DobotDrop(ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.neutral, ref cmdIndex, ref pose);
-
-
         }
 
 
@@ -103,30 +111,70 @@ namespace DobotClientDemo
             {
                 case 0:
                     {
+                        if (cubesInBank > 4)
+                        {
+                            cubesInBank = cubesInBank - 1;
+                            break;
+                        }
+                        // om det redan är max antal i banken ska det ju inte stoppas in mer
 
-                        pose.x = 200;
-                        pose.y = -150;
+                        switch (cubesInBank)
+                        {
+                            case 0: { return; }
+
+                            case 1:
+                                {
+                                    pose.x = -37.3928f;
+                                    pose.y = -227.9042f;
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    pose.x = -3.5285f;
+                                    pose.y = -246.3564f;
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    pose.x = 18.0972f;
+                                    pose.y = -212.3756f;
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    pose.x = -17.7272f;
+                                    pose.y = -192.2734f;
+                                    break;
+                                }
+
+                        }
                         pose.z = 50;
-
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+
                         return;
                     }
                 case 1:
                     {
-                        pose.x = 177;
-                        pose.y = 122;
+
+                        pose.x = 150;
+                        pose.y = 143.6f;
                         pose.z = 50;
 
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
-
                         return;
                     }
+
+                        
+                    
                    case 2:
                     {
+                        HOMEParams hOMEParams = new HOMEParams();
 
-                        pose.x = 200;
-                        pose.y = 0;
-                        pose.z = 50;
+                        DobotDll.GetHOMEParams(ref hOMEParams);
+
+                        pose.x = hOMEParams.x;
+                        pose.y = hOMEParams.y;
+                        pose.z = hOMEParams.z;
 
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         return;
@@ -141,6 +189,23 @@ namespace DobotClientDemo
                 case 4:
                     {
                         pose.z = 14;
+
+                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        return;
+                    }
+                case 5:
+                    {
+                        pose.z = -43.6f;
+
+                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        return;
+                    }
+                case 6:
+                {
+
+                        pose.x = 158;
+                        pose.y = -220;
+                        pose.z = 50;
 
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         return;
@@ -197,6 +262,17 @@ namespace DobotClientDemo
         {
             DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
 
+        }
+
+        public void DobotLaserOn()
+        {
+            DobotDll.SetInfraredSensor(true, 1, 1);
+
+            int sensor = 0;
+            while(sensor != 1)
+            {
+               sensor = DobotDll.GetInfraredSensor(1, 1); //LÖS PÅ FREDAG!
+            }
         }
 
         //private void DobotMoveBand(ref UInt64 cmdIndex)

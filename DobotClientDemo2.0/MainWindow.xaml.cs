@@ -624,7 +624,11 @@ namespace DobotClientDemo
 
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
-            bm.InsertAmount(ID, int.Parse(WithdrawAmount.Text));
+            
+            //dobot.DobotLaserOn();
+            
+
+            //bm.InsertAmount(ID, 100);
             if (!isConnectted)
                 return;
 
@@ -632,25 +636,30 @@ namespace DobotClientDemo
             String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
             DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
-            dobot.Deposit(ref cmdIndex);
+            for (int i = 0; i < int.Parse(WithdrawAmount.Text) / 100; i++)
+            {
+                dobot.Deposit(ref cmdIndex);
+            }
            
         }
 
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
-            bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
-            if(chekAmount == true)
+            //bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
+
+            if (!isConnectted)
+                return;
+
+            Button obj = (Button)sender;
+            String con = obj.Content.ToString();
+            UInt64 cmdIndex = 0;
+            DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
+            //if (chekAmount == true)
             {
-                if (!isConnectted)
-                    return;
-
-                Button obj = (Button)sender;
-                String con = obj.Content.ToString();
-                UInt64 cmdIndex = 0;
-                DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
-
-                dobot.Withdraw(ref cmdIndex);
-
+                for(int i = 0; i < int.Parse(WithdrawAmount.Text)/100; i++)
+                {
+                    dobot.Withdraw(ref cmdIndex);
+                }
             }
         
         }
