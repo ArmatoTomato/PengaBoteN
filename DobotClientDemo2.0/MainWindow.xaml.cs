@@ -677,6 +677,27 @@ namespace DobotClientDemo
             }
             if (o == 1)
                 return;
+
+            int a = 0;
+
+
+            string nameTry = db.GetIdById(ID);
+
+            try
+            {
+                if (nameTry == "")
+                {
+                    int.Parse("A");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Kontrollera din inmatning.");
+                a = 1;
+            }
+            if(a == 1)
+                return;
+
             string name = NameTextBox.Text;
             string password = PasswordTextBox.Text;
 
@@ -689,6 +710,10 @@ namespace DobotClientDemo
             {
                 ATMWindow.Visibility = Visibility.Visible;
                 LoginWindow.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                MessageBox.Show("Kontrollera din inmatning.");
             }
         }
 
