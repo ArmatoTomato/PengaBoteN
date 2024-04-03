@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -86,6 +87,28 @@ namespace DobotClientDemo
 
         public void Deposit(ref UInt64 cmdIndex)
         {
+            DobotDll.SetInfraredSensor(true, 1, 1);
+            EMotor e;
+            e.index = 0;
+            e.speed = 9000;
+            e.isEnabled = 1;
+
+            DobotDll.SetEMotor(ref e, false, ref cmdIndex);
+            byte value = 0;
+            while (true)
+            {
+                DobotDll.GetInfraredSensor(1, ref value);
+                if (value == 1)
+                {
+                    e.isEnabled = 0;
+                    DobotDll.SetEMotor(ref e, false, ref cmdIndex);
+                    break;
+                }
+                
+            }
+            DobotDll.SetInfraredSensor(false, 1, 1);
+
+
 
             cubesInBank = cubesInBank + 1;
             DobotGoToActionPose((int)Position.sensor, ref cmdIndex, ref pose);
@@ -221,8 +244,6 @@ namespace DobotClientDemo
 
         private void DobotMoveBand(int direction, ref UInt64 cmdIndex, ref Pose pose)
         {
-
-
             double STEP_PER_CRICLE = 360.0 / 1.8 * 10.0 * 16.0;
             double MM_PER_CRICLE = 3.1415926535898 * 36.0;
             UInt32 dist = (uint)(25 * STEP_PER_CRICLE / MM_PER_CRICLE);
@@ -231,7 +252,7 @@ namespace DobotClientDemo
             motor.index = 0;
             motor.isEnabled = 1;
             motor.speed = 9000;
-            motor.distance = dist * 2 ;
+            motor.distance = dist * 2;
 
             switch (direction)
             {
@@ -269,10 +290,11 @@ namespace DobotClientDemo
         {
             DobotDll.SetInfraredSensor(true, 1, 1);
 
+            byte a = 1;
             int sensor = 0;
             while(sensor != 1)
             {
-               sensor = DobotDll.GetInfraredSensor(1, 1); //LÖS PÅ FREDAG!
+               sensor = DobotDll.GetInfraredSensor(1, ref a); //LÖS PÅ FREDAG!
             }
         }
 

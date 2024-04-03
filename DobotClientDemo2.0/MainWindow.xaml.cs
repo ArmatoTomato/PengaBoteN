@@ -1,11 +1,13 @@
 ﻿using DobotClientDemo.CPlusDll;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -54,9 +56,6 @@ namespace DobotClientDemo
 
 
             //ConsoleManager.Show();
-
-
-
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -148,7 +147,7 @@ namespace DobotClientDemo
 
 
             HOMECmd homeCmd = new HOMECmd();
-            DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
+            //DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
         }
 
         private void EIOTest()
@@ -624,9 +623,9 @@ namespace DobotClientDemo
 
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
-            
+
             //dobot.DobotLaserOn();
-            
+
 
             //bm.InsertAmount(ID, 100);
             if (!isConnectted)
@@ -640,12 +639,12 @@ namespace DobotClientDemo
             {
                 dobot.Deposit(ref cmdIndex);
             }
-           
+            bm.DepositAmount(ID, int.Parse(WithdrawAmount.Text));
         }
 
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
-            //bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
+            bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
 
             if (!isConnectted)
                 return;
@@ -654,19 +653,30 @@ namespace DobotClientDemo
             String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
             DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
-            //if (chekAmount == true)
+            if (chekAmount == true)
             {
                 for(int i = 0; i < int.Parse(WithdrawAmount.Text)/100; i++)
                 {
                     dobot.Withdraw(ref cmdIndex);
                 }
             }
-        
+            bm.WithdrawAmount(ID, int.Parse(WithdrawAmount.Text));
         }
 
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
-            ID = int.Parse(IDTextBox.Text);
+            int o = 0;
+            try
+            {
+                ID = int.Parse(IDTextBox.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Kontrollera din inmatning.");
+                o = 1;
+            }
+            if (o == 1)
+                return;
             string name = NameTextBox.Text;
             string password = PasswordTextBox.Text;
 
@@ -675,7 +685,7 @@ namespace DobotClientDemo
             EncryptionList<string> n = new EncryptionList<string>();
             string retrivedPassword = n.Decrypt(ID);
 
-            if (RetrievedName == name)
+            if (RetrievedName == name && retrivedPassword == password.ToLower())
             {
                 ATMWindow.Visibility = Visibility.Visible;
                 LoginWindow.Visibility = Visibility.Collapsed;
@@ -711,7 +721,6 @@ namespace DobotClientDemo
 
             try
             {
-
                 if (password != "" && name != "")
                 {
                     BankManager user = new BankManager();
@@ -719,19 +728,24 @@ namespace DobotClientDemo
                     List<string> encryptedPassword = n.Encrypt(password.ToLower());
                     encryptedPassword.ToString().Trim();
                     string test = string.Join("", encryptedPassword.ToArray());
-                    user.CreateAccount(name, 0, test);
-                   
+                    string guid = Guid.NewGuid().ToString();
+                    user.CreateAccount(name, 0, test, guid);
+                    int id = db.GetId(guid);
+                    db.RemoveTemp(id);
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();
+
+                    MessageBox.Show("Ditt ID är" + " " + id.ToString());
                 }
-                ATMWindow.Visibility = Visibility.Visible;
-                CreateAccountWindow.Visibility = Visibility.Collapsed;
+                //CreateAccountWindow.Visibility = Visibility.Collapsed;
+                //LoginWindow.Visibility = Visibility.Visible;
             }
             finally
             {
 
             }
         }
+     
 
 
         //private void Withdraw(ref UInt64 cmdIndex, Pose pose)
