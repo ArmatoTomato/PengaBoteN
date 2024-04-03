@@ -86,6 +86,7 @@ namespace DobotClientDemo
 
         public void Deposit(ref UInt64 cmdIndex)
         {
+
             cubesInBank = cubesInBank + 1;
             DobotGoToActionPose((int)Position.sensor, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.ner, ref cmdIndex, ref pose);
