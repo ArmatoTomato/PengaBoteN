@@ -288,10 +288,11 @@ namespace DobotClientDemo
         {
             DobotDll.SetInfraredSensor(true, 1, 1);
 
+            byte a = 1;
             int sensor = 0;
             while(sensor != 1)
             {
-               sensor = DobotDll.GetInfraredSensor(1, 1); //LÖS PÅ FREDAG!
+               sensor = DobotDll.GetInfraredSensor(1, ref a); //LÖS PÅ FREDAG!
             }
         }
 

@@ -623,9 +623,9 @@ namespace DobotClientDemo
 
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
-            
+
             //dobot.DobotLaserOn();
-            
+
 
             //bm.InsertAmount(ID, 100);
             if (!isConnectted)
@@ -639,12 +639,12 @@ namespace DobotClientDemo
             {
                 dobot.Deposit(ref cmdIndex);
             }
-           
+            bm.DepositAmount(ID, int.Parse(WithdrawAmount.Text));
         }
 
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
-            //bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
+            bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(WithdrawAmount.Text));
 
             if (!isConnectted)
                 return;
@@ -653,14 +653,14 @@ namespace DobotClientDemo
             String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
             DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
-            //if (chekAmount == true)
+            if (chekAmount == true)
             {
                 for(int i = 0; i < int.Parse(WithdrawAmount.Text)/100; i++)
                 {
                     dobot.Withdraw(ref cmdIndex);
                 }
             }
-        
+            bm.WithdrawAmount(ID, int.Parse(WithdrawAmount.Text));
         }
 
         private void ButtonLogin_Click(object sender, EventArgs e)

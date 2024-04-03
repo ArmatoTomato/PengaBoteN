@@ -120,7 +120,7 @@ public class DataBaseSQL
         return true;
     }
 
-    public void UpdateBalanceByID(int balance, int id)
+    public void UpdateBalanceByID(int id, int balance)
     {
         Open();
         _command.CommandText = "UPDATE ATM SET balance = @balance WHERE id = @id;";

@@ -29,7 +29,20 @@ namespace DobotClientDemo
                 return false;
             }
         }
-        public void InsertAmount(int id, int amount)
+        public void WithdrawAmount(int id, int amount)
+        {
+            db = new DataBaseSQL("ATM.db");
+            int existingAmount = db.GetBalance(id);
+            db.UpdateBalanceByID(id, (existingAmount - amount));
+        }
+
+        public int GetBalance(int id)
+        {
+            db = new DataBaseSQL("ATM.db");
+            int balance = db.GetBalance(id);
+            return balance;
+        }
+        public void DepositAmount(int id, int amount)
         {
             db = new DataBaseSQL("ATM.db");
             int existingAmount = db.GetBalance(id);
