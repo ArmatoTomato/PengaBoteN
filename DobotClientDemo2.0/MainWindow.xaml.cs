@@ -1,6 +1,7 @@
 ﻿using DobotClientDemo.CPlusDll;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -55,9 +56,6 @@ namespace DobotClientDemo
 
 
             //ConsoleManager.Show();
-
-
-
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -149,7 +147,7 @@ namespace DobotClientDemo
 
 
             HOMECmd homeCmd = new HOMECmd();
-            DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
+            //DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
         }
 
         private void EIOTest()
@@ -667,7 +665,18 @@ namespace DobotClientDemo
 
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
-            ID = int.Parse(IDTextBox.Text);
+            int o = 0;
+            try
+            {
+                ID = int.Parse(IDTextBox.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Kontrollera din inmatning.");
+                o = 1;
+            }
+            if (o == 1)
+                return;
             string name = NameTextBox.Text;
             string password = PasswordTextBox.Text;
 
@@ -726,7 +735,7 @@ namespace DobotClientDemo
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();
 
-                   ShowID.Text = id.ToString();
+                    MessageBox.Show("Ditt ID är" + " " + id.ToString());
                 }
                 //CreateAccountWindow.Visibility = Visibility.Collapsed;
                 //LoginWindow.Visibility = Visibility.Visible;

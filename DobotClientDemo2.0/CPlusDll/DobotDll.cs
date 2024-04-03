@@ -184,6 +184,6 @@ namespace DobotClientDemo.CPlusDll
         public static extern int SetInfraredSensor(bool enable, int laser, byte version);
 
         [DllImport("DobotDll.dll", EntryPoint = "GetInfraredSensor", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int GetInfraredSensor(int laser, byte version);
+        public static extern int GetInfraredSensor(int laser, ref byte value);
     }
 }

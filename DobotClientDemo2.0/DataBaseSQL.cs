@@ -251,9 +251,3 @@ public class DataBaseSQL
         return password;
     }
 }
-
-
-
-    
-
-//GUID - 
