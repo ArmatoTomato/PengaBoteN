@@ -59,22 +59,13 @@ namespace DobotClientDemo
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-            //StartGetPose();
-
-            //StartDobot();
-            StartDobot();
-
+           StartDobot();
         }
 
-        /// <summary>
-        /// StartDobot
-        /// </summary>
         private void StartDobot()
         {
             StringBuilder fwType = new StringBuilder(60);
             StringBuilder version = new StringBuilder(60);
-            ///连接dobot
             ///connect dobot
             int ret = DobotDll.ConnectDobot("", 115200, fwType, version);
             if (ret != (int)DobotConnect.DobotConnect_NoError)
@@ -87,13 +78,11 @@ namespace DobotClientDemo
             isConnectted = true;
             DobotDll.SetCmdTimeout(3000);
 
-            ///获取dobot的名称
             ///get device name and device Serial Number
             string deviceName = "Dobot Magician";
             DobotDll.SetDeviceName(deviceName);
             StringBuilder deviceSN = new StringBuilder(64);
             DobotDll.GetDeviceName(deviceSN, 64);
-            ///清理队列并开始执行队列
             ///clear queue and start executing queue
             DobotDll.SetQueuedCmdClear();
             DobotDll.SetQueuedCmdStartExec();
@@ -102,7 +91,6 @@ namespace DobotClientDemo
         }
         private void SetParam()
         {
-            ///设置运动参数
             ///set motion parameters
             UInt64 cmdIndex = 0;
             JOGJointParams jsParam;
@@ -147,7 +135,7 @@ namespace DobotClientDemo
 
 
             HOMECmd homeCmd = new HOMECmd();
-            //DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
+            DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
         }
 
         private void EIOTest()
@@ -715,6 +703,8 @@ namespace DobotClientDemo
             {
                 MessageBox.Show("Kontrollera din inmatning.");
             }
+
+            Amount.Text = "Du har: " + db.GetBalance(ID).ToString() + "kr";
         }
 
         private void IDTextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -756,30 +746,19 @@ namespace DobotClientDemo
                     string guid = Guid.NewGuid().ToString();
                     user.CreateAccount(name, 0, test, guid);
                     int id = db.GetId(guid);
-                    db.RemoveTemp(id);
+                    db.RemoveTemp(id); //FIXA DETTA!
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();
 
-                    MessageBox.Show("Ditt ID är" + " " + id.ToString());
+                    MessageBox.Show("Ditt ID är" + " " + id.ToString()); //Använd $
                 }
-                //CreateAccountWindow.Visibility = Visibility.Collapsed;
-                //LoginWindow.Visibility = Visibility.Visible;
             }
             finally
             {
 
             }
+            CreateAccountWindow.Visibility = Visibility.Collapsed;
+            LoginWindow.Visibility = Visibility.Visible;
         }
-     
-
-
-        //private void Withdraw(ref UInt64 cmdIndex, Pose pose)
-        //{
-        //    DobotGoToActionPose(1, cmdIndex, pose)
-        //}
-
-
-
     }
-
 }

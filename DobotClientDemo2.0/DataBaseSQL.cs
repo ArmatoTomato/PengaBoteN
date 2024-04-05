@@ -218,7 +218,11 @@ public class DataBaseSQL
         idParam.Value = id;
         _command.Parameters.Add(idParam);
 
-        _command.CommandText = "REMOVE temp from ATM WHERE id = @id;";
+        _command.CommandText = "DELETE temp FROM ATM WHERE id = @id;";
+
+        _command.Prepare();
+        _command.ExecuteNonQuery();
+
         Close();
     }
     public string GetName(int id)

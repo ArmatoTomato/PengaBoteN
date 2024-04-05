@@ -80,6 +80,9 @@
     <Compile Include="BankManager.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="WithdrawView.xaml.cs">
+      <DependentUpon>WithdrawView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,6 +100,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WithdrawView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
