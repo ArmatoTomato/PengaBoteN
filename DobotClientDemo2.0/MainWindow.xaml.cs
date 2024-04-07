@@ -147,7 +147,7 @@ namespace DobotClientDemo
 
 
             HOMECmd homeCmd = new HOMECmd();
-            //DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
+            DobotDll.SetHOMECmd(ref homeCmd, false, ref cmdIndex);
         }
 
         private void EIOTest()
@@ -623,11 +623,6 @@ namespace DobotClientDemo
 
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
-
-            //dobot.DobotLaserOn();
-
-
-            //bm.InsertAmount(ID, 100);
             if (!isConnectted)
                 return;
 
