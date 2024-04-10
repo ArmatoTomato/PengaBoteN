@@ -620,11 +620,6 @@ namespace DobotClientDemo
 
         private void ButtonDeposit_Click(object sender, RoutedEventArgs e)
         {
-
-            //dobot.DobotLaserOn();
-
-
-            //bm.InsertAmount(ID, 100);
             if (!isConnectted)
                 return;
 
