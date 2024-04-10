@@ -34,6 +34,9 @@ namespace DobotClientDemo
         int ID { get; set; }
         public MainWindow()
         {
+            WindowState = WindowState.Maximized;
+            WindowStyle = WindowStyle.None;
+
             db = new DataBaseSQL("ATM.db");
             db.CreateDataBase();
             db.UpdateBalanceByID(200, 1);
@@ -53,9 +56,15 @@ namespace DobotClientDemo
             //sldAcc.AddHandler(Slider.MouseLeftButtonUpEvent, new MouseButtonEventHandler(blurSlider_MouseLeftButtonUp), true);
 
             //modeStyle.SelectedIndex = 2;
-
-
             //ConsoleManager.Show();
+        }
+        private void DarkMode(object sender, RoutedEventArgs e)
+        {
+            Background = Brushes.Black;
+        }
+        private void LightMode(object sender, RoutedEventArgs e)
+        {
+            Background = Brushes.LightPink;
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
