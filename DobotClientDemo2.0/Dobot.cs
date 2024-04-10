@@ -69,6 +69,8 @@ namespace DobotClientDemo
                 return;
 
             }
+
+
             DobotGoToActionPose((int)Position.moneyPoolSideOfConvBelt, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.moneyPool, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.ground, ref cmdIndex, ref pose);
@@ -81,7 +83,6 @@ namespace DobotClientDemo
             DobotGoToActionPose((int)Position.down, ref cmdIndex, ref pose);
             DobotDrop(ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.up, ref cmdIndex, ref pose);
-            DobotDrop(ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.neutral, ref cmdIndex, ref pose);
             DobotMoveBand((int)ConveyerDirection.right, ref cmdIndex, ref pose);
 
@@ -97,7 +98,15 @@ namespace DobotClientDemo
             e.speed = 9000;
             e.isEnabled = 1;
 
-            DobotDll.SetEMotor(ref e, false, ref cmdIndex);
+            UInt64 temp = cmdIndex;
+            DobotDll.SetQueuedCmdStartExec();
+
+            DobotDll.SetEMotor(ref e, true, ref cmdIndex);
+
+            while (temp < cmdIndex)
+                DobotDll.GetQueuedCmdCurrentIndex(ref temp);
+            //loopen krävs för att säkerställa att alla komandon får sina rätta index och att de hamnar i kön och utförs korrekt
+            DobotDll.SetQueuedCmdStopExec();
             byte value = 0;
             int i = 0;
             while (true)
@@ -200,8 +209,8 @@ namespace DobotClientDemo
                 case 1:
                     {
 
-                        pose.x = 147.2320f;
-                        pose.y = 156.0622f;
+                        pose.x = 146.5381f;
+                        pose.y = 162.9993f;
                         pose.z = 50;
 
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
@@ -274,23 +283,33 @@ namespace DobotClientDemo
             motor.speed = 9000;
             motor.distance = dist * 4;
 
+            UInt64 temp = cmdIndex;
+            DobotDll.SetQueuedCmdStartExec();
+
+
             switch (direction)
             {
                 case 0:
                     {
                         motor.speed = motor.speed * -1;
-                        DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+                        DobotDll.SetEMotorS(ref motor, true, ref cmdIndex);
                         return;
                     }
                 case 1:
                     {
-                        DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+                        DobotDll.SetEMotorS(ref motor, true, ref cmdIndex);
                         return;
                     }
             }
 
+            while (temp < cmdIndex)
+                DobotDll.GetQueuedCmdCurrentIndex(ref temp);
+            //loopen krävs för att säkerställa att alla komandon får sina rätta index och att de hamnar i kön och utförs korrekt
+            DobotDll.SetQueuedCmdStopExec();
+
             motor.isEnabled = 0;
             DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
+
         }
 
         private void DobotDrop(ref UInt64 cmdIndex, ref Pose pose)
