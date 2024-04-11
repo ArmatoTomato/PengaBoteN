@@ -4,7 +4,7 @@
         Title="Dobot Demo" Height="350" Width="620" Closed="Window_Closed"
         ResizeMode="NoResize" Loaded="Window_Loaded"
         Background="LightPink">
-        
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="89" />
@@ -18,7 +18,7 @@
             <Button Content="Deposit" Height="40" Click="ButtonDeposit_Click" Grid.Row="2"/>
         </StackPanel>
 
-        <StackPanel x:Name="LoginWindow" Margin="-9,68,0,0" Grid.RowSpan="3" RenderTransformOrigin="0.505,0.75">
+        <StackPanel x:Name="LoginWindow" Margin="-4,31,-4,-52" Grid.RowSpan="2" RenderTransformOrigin="0.505,0.75" Grid.Row="1">
             <TextBox x:Name="IDTextBox" TextWrapping="Wrap" Margin="0,0,0,0" Text="48" Width="500" Height="30"  PreviewMouseDown="IDTextBox_PreviewMouseDown"/>
             <TextBox x:Name="NameTextBox" TextWrapping="Wrap" Margin="0,10,0,0" Text="Test" Width="500" Height="30" PreviewMouseDown="IDTextBox_PreviewMouseDown"/>
             <TextBox x:Name="PasswordTextBox" TextWrapping="Wrap" Margin="0,10,0,0" Text="password" Width="500" Height="30" PreviewMouseDown="IDTextBox_PreviewMouseDown"/>
@@ -37,22 +37,6 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <Grid Visibility="Hidden">
 
@@ -196,6 +180,6 @@
             <Button Content="Withdraw" Margin="83,45,434,66" Click="ButtonWithdraw_Click" Grid.Row="2"/>
             <Button Content="Deposit" Margin="414,40,103,71" Click="ButtonDeposit_Click" Grid.Row="2"/>
         </Grid>
-        <ToggleButton x:Name ="DarksMode" Margin="546,6,4,63" Content="Dark mode" Checked="DarkMode" Unchecked="LightMode"/>
+        <ToggleButton x:Name ="DarksMode" Margin="533,24,25,45" Content="Dark mode" Checked="DarkMode" Unchecked="LightMode"/>
     </Grid>
 </Window>

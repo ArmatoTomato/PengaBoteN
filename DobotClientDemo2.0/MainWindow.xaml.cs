@@ -34,17 +34,16 @@ namespace DobotClientDemo
         int ID { get; set; }
         public MainWindow()
         {
-            WindowState = WindowState.Maximized;
+            WindowState = WindowState.Maximized;//Fullscreen
             WindowStyle = WindowStyle.None;
 
-            db = new DataBaseSQL("ATM.db");
-            db.CreateDataBase();
-            db.UpdateBalanceByID(200, 1);
-            bm = new BankManager();
+            db = new DataBaseSQL("ATM.db");//Skapar ett databas objekt ATM
+            db.CreateDataBase();//SKapar databasen i SQL
+            bm = new BankManager();//Skapar en ny bankmanager objekt
 
-            EncryptionList<string> nd;
-            nd = new EncryptionList<string>();
-            //List<string> oga = nd.Encrypt("ALva");
+            EncryptionList<string> el;//Skapar nytt objekt, en lista som sköter kryptering
+            el = new EncryptionList<string>();
+
             ///attach event handler to corresponding events
             InitializeComponent();
             
@@ -58,6 +57,9 @@ namespace DobotClientDemo
             //modeStyle.SelectedIndex = 2;
             //ConsoleManager.Show();
         }
+
+
+        //Knappen som byter mellan dark och light mode (kan vara färblinds anpassat)
         private void DarkMode(object sender, RoutedEventArgs e)
         {
             Background = Brushes.Black;
@@ -66,6 +68,8 @@ namespace DobotClientDemo
         {
             Background = Brushes.LightPink;
         }
+
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
            StartDobot();

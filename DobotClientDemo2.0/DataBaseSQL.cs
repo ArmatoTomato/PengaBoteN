@@ -44,7 +44,6 @@ public class DataBaseSQL
 
     public void CreateDataBase()
     {
-
         Open();
 
         try
@@ -218,7 +217,7 @@ public class DataBaseSQL
         idParam.Value = id;
         _command.Parameters.Add(idParam);
 
-        _command.CommandText = "DELETE temp FROM ATM WHERE id = @id;";
+        _command.CommandText = "DELETE FROM ATM WHERE id = @id;";
 
         _command.Prepare();
         _command.ExecuteNonQuery();
