@@ -631,28 +631,28 @@ namespace DobotClientDemo
             String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
             DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
-            for (int i = 0; i < int.Parse(Amount.Text) / 100; i++)
+            for (int i = 0; i < int.Parse(Amount.Text) / 100; i++)//Körs så många gånger som inmatning/100 för att alla kuber är värda 100
             {
-                dobot.Deposit(ref cmdIndex);
+                dobot.Deposit(ref cmdIndex);//Sätter in pengar
             }
-            bm.DepositAmount(ID, int.Parse(Amount.Text));
-            Balance.Text = "Your balance is: " + db.GetBalance(ID).ToString() + "sek";
+            bm.DepositAmount(ID, int.Parse(Amount.Text));//Skickar in insättningen och id till bm som sätter in på rätt konto
+            Balance.Text = "Your balance is: " + db.GetBalance(ID).ToString() + "sek";//Skriver ut hur mycket pengar som finns på kontot
         }
 
         private void ButtonWithdraw_Click(object sender, RoutedEventArgs e)
         {
-            bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(Amount.Text));
+            bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(Amount.Text));//Kollar om mängden pengar som ska tas ut är möjligt
 
             if (!isConnectted)
-                return;
+                return;//Är roboten inte ansluten körs inte koden
 
             Button obj = (Button)sender;
             String con = obj.Content.ToString();
             UInt64 cmdIndex = 0;
             DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
-            if (chekAmount == true)
+            if (chekAmount == true)//Om det är möjligt att ta ut den inmatade summan
             {
-                for(int i = 0; i < int.Parse(Amount.Text)/100; i++)
+                for(int i = 0; i < int.Parse(Amount.Text)/100; i++)//En motsatt deposit
                 {
                     dobot.Withdraw(ref cmdIndex);
                 }
@@ -666,7 +666,7 @@ namespace DobotClientDemo
             int o = 0;
             try
             {
-                ID = int.Parse(IDTextBox.Text);
+                ID = int.Parse(IDTextBox.Text);//Kollar så ID är siffror och inget annat
             }
             catch
             {
@@ -674,18 +674,16 @@ namespace DobotClientDemo
                 o = 1;
             }
             if (o == 1)
-                return;
+                return;//Då avslutas funktionen
 
             int a = 0;
-
-
             string nameTry = db.GetIdById(ID);
-
+            //Kkontroll om ID finns, om namnet är tomt finns inte konto med inmatade ID
             try
             {
-                if (nameTry == "")
+                if (nameTry == "")//Om konto inte finns
                 {
-                    int.Parse("A");
+                    int.Parse("A");//Kommer aldrig gå och då avslutas funktionen
                 }
             }
             catch
@@ -696,15 +694,16 @@ namespace DobotClientDemo
             if(a == 1)
                 return;
 
+            //Tar data från rutorna i gränssnittet
             string name = NameTextBox.Text;
             string password = PasswordTextBox.Text;
-
-            string RetrievedName = db.GetName(ID);
+            
+            string retrievedName = db.GetName(ID);//Hämtar namnet
 
             EncryptionList<string> n = new EncryptionList<string>();
-            string retrivedPassword = n.Decrypt(ID);
+            string retrivedPassword = n.Decrypt(ID);//Hämtar det dekrypterade lösenordet
 
-            if (RetrievedName == name && retrivedPassword == password.ToLower())
+            if (retrievedName == name && retrivedPassword == password.ToLower())//Om det stämmer så bytas man till en annan vy
             {
                 ATMWindow.Visibility = Visibility.Visible;
                 LoginWindow.Visibility = Visibility.Collapsed;
@@ -729,34 +728,34 @@ namespace DobotClientDemo
             }
         }
 
-        private void Back_Click(object sender, EventArgs e)
+        private void Back_Click(object sender, EventArgs e)//Bytar vy
         {
             CreateAccountWindow.Visibility = Visibility.Collapsed;
             LoginWindow.Visibility = Visibility.Visible;
         }
-        private void CreateAccount_Click(object sender, EventArgs e)
+        private void CreateAccountMenu_Click(object sender, EventArgs e)//Bytar till skapa konto vyn
         {
             CreateAccountWindow.Visibility = Visibility.Visible;
             LoginWindow.Visibility = Visibility.Collapsed;
         }
-        private void CreateAccountCreate_Click(object sender, EventArgs e)
+        private void CreateAccount_Click(object sender, EventArgs e)
         {
             string name = NameTextBoxCreate.Text;
             string password = PasswordTextBoxCreate.Text;
 
             try
             {
-                if (password != "" && name != "")
+                if (password != "" && name != "")//Kollar så rutorna innehåller data
                 {
                     BankManager user = new BankManager();
                     EncryptionList<string> n = new EncryptionList<string>();
-                    List<string> encryptedPassword = n.Encrypt(password.ToLower());
-                    encryptedPassword.ToString().Trim();
-                    string test = string.Join("", encryptedPassword.ToArray());
-                    string guid = Guid.NewGuid().ToString();
-                    user.CreateAccount(name, 0, test, guid);
-                    int id = db.GetId(guid);
-                    db.RemoveTemp(id); //FIXA DETTA!
+                    List<string> encryptedPasswordList = n.Encrypt(password.ToLower());//Krypterar lösenordert
+                    encryptedPasswordList.ToString().Trim();//Tar bort mellanslag
+                    string passwordEncrypted = string.Join("", encryptedPasswordList.ToArray());//Gör om till string
+                    string guid = Guid.NewGuid().ToString();//Skapar en temporär variabel som används för att hitta ID
+                    user.CreateAccount(name, 0, passwordEncrypted, guid);//Skapar kontot
+                    int id = db.GetId(guid);//Hämtar ID genom GUID som aldrig kan vara samma två gånger
+                    db.RemoveTemp(id); //FIXA DETTA! , Tar bort temporära guid
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();
 
