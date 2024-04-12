@@ -752,7 +752,7 @@ namespace DobotClientDemo
                     string guid = Guid.NewGuid().ToString();
                     user.CreateAccount(name, 0, test, guid);
                     int id = db.GetId(guid);
-                    db.RemoveTemp(id); //FIXA DETTA!
+                    //db.RemoveTemp(id); //FIXA DETTA!
                     NameTextBoxCreate.Clear();
                     PasswordTextBoxCreate.Clear();
 
