@@ -78,7 +78,7 @@
     </ApplicationDefinition>
     <Compile Include="Dobot.cs" />
     <Compile Include="BankManager.cs" />
-    <Compile Include="Node.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="WithdrawView.xaml.cs">
       <DependentUpon>WithdrawView.xaml</DependentUpon>
     </Compile>

@@ -25,7 +25,7 @@ namespace DobotClientDemo
         }
     }
 
-    public class EncryptionList<T>
+    public class EncryptionList<T>//Hanterar dekryptionen
     {
         DataBaseSQL db;
 
