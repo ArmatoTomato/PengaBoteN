@@ -8,7 +8,6 @@ namespace DobotClientDemo.CPlusDll
 {
     
     /*
-     * 末端选择
      * list of end effector type
      */
     public enum EndType {
@@ -29,7 +28,6 @@ namespace DobotClientDemo.CPlusDll
     };
 
     /*
-     * 位姿
      * pose struct
      */
     public struct Pose {
@@ -42,7 +40,6 @@ namespace DobotClientDemo.CPlusDll
     };
 
     /*
-     * 运动学参数
      * motion parameters
      */
     public struct Kinematics {

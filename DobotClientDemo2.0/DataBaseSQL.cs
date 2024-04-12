@@ -262,8 +262,6 @@ public class DataBaseSQL
         _command.CommandText = "SELECT password FROM ATM WHERE id = @id;";
         SQLiteDataReader rdr = _command.ExecuteReader();
 
-
-
         string password = null;
 
         while (rdr.Read())

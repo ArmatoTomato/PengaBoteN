@@ -261,21 +261,28 @@ namespace DobotClientDemo
         {
             bool chekAmount = bm.ChekExistingAmount(ID, int.Parse(Amount.Text));//Kollar om mängden pengar som ska tas ut är möjligt
 
-            if (!isConnectted)
-                return;//Är roboten inte ansluten körs inte koden
-
-            Button obj = (Button)sender;
-            String con = obj.Content.ToString();
-            UInt64 cmdIndex = 0;
-            DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
             if (chekAmount == true)//Om det är möjligt att ta ut den inmatade summan
             {
+                if (!isConnectted)
+                return;//Är roboten inte ansluten körs inte koden
+
+                Button obj = (Button)sender;
+                String con = obj.Content.ToString();
+                UInt64 cmdIndex = 0;
+                DobotDll.GetQueuedCmdCurrentIndex(ref cmdIndex);
+            
+            
                 for(int i = 0; i < int.Parse(Amount.Text)/100; i++)//En motsatt deposit
                 {
                     dobot.Withdraw(ref cmdIndex);
                 }
+
+                bm.WithdrawAmount(ID, int.Parse(Amount.Text));
             }
-            bm.WithdrawAmount(ID, int.Parse(Amount.Text));
+            else
+            {
+                MessageBox.Show("You dont have enough money!");
+            }
             Balance.Text = "Your balance is: " + db.GetBalance(ID).ToString() + "sek";
         }
 
@@ -345,7 +352,6 @@ namespace DobotClientDemo
                 Console.WriteLine(ex.ToString());
             }
         }
-
         private void Back_Click(object sender, EventArgs e)//Bytar vy
         {
             CreateAccountWindow.Visibility = Visibility.Collapsed;

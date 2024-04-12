@@ -23,7 +23,6 @@ namespace DobotClientDemo
         {
             get { return GetConsoleWindow() != IntPtr.Zero; }
         }
-        /// 创建一个控制面板实例如果进程还未被添加到已存在的控制面板
         /// Creates a new console instance if the process is not attached to a console already.    
         public static void Show()
         {

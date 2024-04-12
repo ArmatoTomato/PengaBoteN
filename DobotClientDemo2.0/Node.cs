@@ -11,9 +11,9 @@ using System.Windows.Shapes;
 
 namespace DobotClientDemo
 {
-    public class Node<T>
+    public class Node<T>//Generisk datatyp för att underlätta
     {
-        public T _data;
+        public T _data;//Dubbellänkad lista som har relation till föregående och nästkommande nod
         public Node<T> _next;
         public Node<T> _prev;
 
@@ -29,30 +29,23 @@ namespace DobotClientDemo
     {
         DataBaseSQL db;
 
-        public static Node<T> _first = null;
+        public static Node<T> _first = null;//Värdena börjar som inget
         public static Node<T> _last = null;
 
-        public static void AddLast(T data)
+        public static void AddLast(T data)//Lägger till värdet sist
         {
             Node<T> newNode = new Node<T>(data);
-            if (_first == null)
+            if (_first == null)//Om första är tomm läggs det till där och då blir det även sista 
             {
                 _first = newNode;
                 _last = newNode;
             }
-            else
+            else//Finns det redan värde i listan läggs det nya till som sista och före detta sista blir näst sista
             {
                 _last._next = newNode;
                 newNode._prev = _last;
                 _last = newNode;
             }
-
-            //Node<T> temp = _first;
-            //while (temp._next != null)
-            //{
-            //    temp = temp._next;
-            //}
-            //temp._next = new Node<T>(data);
         }
 
         public static List<string> ReadFile()
@@ -62,13 +55,12 @@ namespace DobotClientDemo
 
             try
             {
-                StreamReader sr = new StreamReader("Encryption.txt");
-
+                StreamReader sr = new StreamReader("Encryption.txt");//Läser in krypteringsfilen
                 line = sr.ReadLine();
 
                 while (line != null)
                 {
-                    AddLast((T)(Convert.ChangeType(line, typeof(T))));
+                    AddLast((T)(Convert.ChangeType(line, typeof(T))));//Lägger till det inlästa värdet sist i listan
                     line = sr.ReadLine();
                     rowsInFile.Add(line);
                 }
@@ -88,53 +80,46 @@ namespace DobotClientDemo
         }
         public List<string> Encrypt(string password)
         {
-            ReadFile();
+            ReadFile();//Skapar rowsinfile listan
             Node<T> temp = _first;
             List<string> PasswordList = new List<string>();
 
             string smallPassword = password.ToLower();
 
             int i = 0;
-            char[] test = smallPassword.ToCharArray();
-            int s = test.GetLength(0);
+            char[] passwordArray = smallPassword.ToCharArray();//Gör om lösenordet till en array
+            int s = passwordArray.GetLength(0);//Array kan man hitta längden av
 
-            while (i != s)
+            while (i != s)//Körs så många tecken som lösenordet har
             {
-                if (temp._data.ToString() == test[i].ToString())
+                if (temp._data.ToString() == passwordArray[i].ToString())//Kollar om temp har samma värde som första tecknet i lösenordet
                 {
-                    PasswordList.Add(temp._next._data.ToString());
-                    i++;
-                    temp = _first;
+                    PasswordList.Add(temp._next._data.ToString());//Isåfall läggs nästa värdet från inlästa filen till i lösenordslistan
+                    i++;//Då ökar i
+                    temp = _first;//Temp startar om, man kan ha samma tecken två gåner 
                 }
-                temp = temp._next;
+                temp = temp._next;//Om värdena inte matchar går testas nästa värde från den inlästa krypteringsfilen tills rätt hittas
             }
 
-            return PasswordList;
+            return PasswordList;//Returnerar krypterat lösenord
         }
 
-        public string Decrypt(int id)
+        public string Decrypt(int id)//Omvänd kryptering, istället för att lägga till värdet ett senare tas det ett tidigare för att återställa lösenordet
         {
             db = new DataBaseSQL("ATM.db");
 
             string password = db.GetPassword(id);
             List<string> DecryptedList = new List<string>();
-            char[] test = password.ToCharArray();
-            int s = test.GetLength(0);
+            char[] passwordArray = password.ToCharArray();
+            int s = passwordArray.GetLength(0);
 
             ReadFile();
             Node<T> temp = _first;
-
-            //for (int ia = 0; ia < test.GetLength(0);)
-            //{
-            //    temp = AddLast((T)(Convert.ChangeType(test[ia], typeof(T))));
-            //    ia++;
-            //}
-
             int i = 0;
 
             while (i != s)
             {
-                if (temp._data.ToString() == test[i].ToString())
+                if (temp._data.ToString() == passwordArray[i].ToString())
                 {
                     DecryptedList.Add(temp._prev._data.ToString());
                     i++;
@@ -143,10 +128,10 @@ namespace DobotClientDemo
                 temp = temp._next;
             }
 
-            DecryptedList.ToString().Trim();
-            string decryptedPassword = string.Join("", DecryptedList.ToArray());
+            DecryptedList.ToString().Trim();//Tar bort mellanslag
+            string decryptedPassword = string.Join("", DecryptedList.ToArray());//Gör om till string
 
-            return decryptedPassword;
+            return decryptedPassword;//Krypterat och klart
         }
     }
 }

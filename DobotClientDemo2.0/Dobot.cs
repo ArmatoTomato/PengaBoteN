@@ -71,10 +71,9 @@ namespace DobotClientDemo
             // om det inte finns några pengar att ta ut ska man inte kunna ta ut pengar
             if (cubesInBank == 0)
             {
+                MessageBox.Show("Not enough money in the machine");
                 return;
-
             }
-
 
             DobotGoToActionPose((int)Position.moneyPoolSideOfConvBelt, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.moneyPool, ref cmdIndex, ref pose);
@@ -91,8 +90,6 @@ namespace DobotClientDemo
             DobotGoToActionPose((int)Position.neutral, ref cmdIndex, ref pose);
             DobotMoveBand((int)ConveyerDirection.right, ref cmdIndex, ref pose);
             //roboten går enligt schemat till sina olika positioner
-
-
         }
 
         public void Deposit(ref UInt64 cmdIndex)
@@ -145,8 +142,7 @@ namespace DobotClientDemo
                 cubesInBank = cubesInBank - 1;
                 DobotMoveBand((int)ConveyerDirection.right, ref cmdIndex, ref pose);
                 return;
-                // om det är fullt i maskinen får man bara tillbaka sin peng
-
+                // om det är fullt i maskinen får man bara tillbaka sin pengar
             }
 
             DobotGoToActionPose((int)Position.sensor, ref cmdIndex, ref pose);
@@ -164,7 +160,6 @@ namespace DobotClientDemo
             // rörelsemöntret för att sätta in pengar
         }
 
-
         private void DobotGoToActionPose(int mode, ref UInt64 cmdIndex, ref Pose pose)
         {
             DobotDll.SetQueuedCmdStartExec();
@@ -180,7 +175,6 @@ namespace DobotClientDemo
                         {
                             cubesInBank = cubesInBank - 1;
                             break;
-                            
                         }
                         // om det redan är max antal i banken ska det ju inte stoppas in mer
 
@@ -213,7 +207,6 @@ namespace DobotClientDemo
                                     pose.y = -192.2734f;
                                     break;
                                 }
-
                         }
                         pose.z = 50;
                         cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
@@ -222,7 +215,6 @@ namespace DobotClientDemo
                     }
                 case 1:
                     {
-
                         pose.x = 146.5381f;
                         pose.y = 162.9993f;
                         pose.z = 50;
@@ -230,9 +222,7 @@ namespace DobotClientDemo
                         cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                     }
-
-                        
-                    
+                      
                    case 2:
                     {
                         HOMEParams hOMEParams = new HOMEParams();
