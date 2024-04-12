@@ -733,6 +733,12 @@ namespace DobotClientDemo
             CreateAccountWindow.Visibility = Visibility.Collapsed;
             LoginWindow.Visibility = Visibility.Visible;
         }
+        private void LogOut_Click(object sender, EventArgs e)
+        {
+            ATMWindow.Visibility= Visibility.Collapsed;
+            LoginWindow.Visibility = Visibility.Visible;
+            ID = 0;
+        }
         private void CreateAccountMenu_Click(object sender, EventArgs e)//Bytar till skapa konto vyn
         {
             CreateAccountWindow.Visibility = Visibility.Visible;
