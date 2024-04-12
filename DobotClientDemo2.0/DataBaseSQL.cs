@@ -16,7 +16,7 @@ public class DataBaseSQL
     SQLiteConnection _connection; //kräver using System.Data.SQLite;
     SQLiteCommand _command;
 
-    public DataBaseSQL(string databaseName)
+    public DataBaseSQL(string databaseName)//Skapar databasen
     {
         _database_name = databaseName;
         _connection_string = "URI=file:" + databaseName;
@@ -34,7 +34,7 @@ public class DataBaseSQL
         }
     }
 
-    private void Close()
+    private void Close()//Stänger :(
     {
         if (_connection != null)
         {
@@ -49,17 +49,17 @@ public class DataBaseSQL
         try
         {
             _command.CommandText = "CREATE TABLE ATM(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, balance INT, password TEXT, temp TEXT);";
-            _command.ExecuteNonQuery();
+            _command.ExecuteNonQuery();//Skapar databasen, kommer endast ske om den inte redan finns
         }
         catch (Exception e)
         {
-            WriteToFile(e); //Kanske onödig men cool
+            WriteToFile(e); //Skriver felmedelandet till en fil som man kan använda som felhantering
         }
 
         Close();
     }
 
-    public void WriteToFile(System.Exception e)
+    public void WriteToFile(System.Exception e)//Skriver felmedelandet till Error.txt filen
     {
         try
         {
@@ -73,7 +73,7 @@ public class DataBaseSQL
         }
     }
 
-    private void CheckSQLiteVersion()
+    private void CheckSQLiteVersion()//Hämtar nuvarande version av SQL
     {
         Open();
         string stm = "SELECT SQLITE_VERSION();";
@@ -94,9 +94,11 @@ public class DataBaseSQL
 
     public bool AddUser(string name, int balance, string password, string temp)
     {
-        Open();
+        Open();//Öppnar vägen tilL SQL
         _command.CommandText = "INSERT INTO ATM (name, balance, password, temp) VALUES (@name, @balance, @password, @temp);";
+        //Skapar en commandline i format som SQL kan hantera
 
+        //Bestämmer vad de olika värdena från parameter listan
         SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
         SQLiteParameter balanceParam = new SQLiteParameter("@balance", System.Data.DbType.Int32);
         SQLiteParameter passwordParam = new SQLiteParameter("@password", System.Data.DbType.String);
@@ -107,6 +109,7 @@ public class DataBaseSQL
         passwordParam.Value = password;
         tempParam.Value = temp;
 
+        //Lägger till värena i commandline
         _command.Parameters.Add(nameParam);
         _command.Parameters.Add(balanceParam);
         _command.Parameters.Add(passwordParam);
@@ -126,15 +129,12 @@ public class DataBaseSQL
 
         SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
         SQLiteParameter balanceParam = new SQLiteParameter("@balance", System.Data.DbType.Int32);
-        //SQLiteParameter nameParam = new SQLiteParameter("@name", System.Data.DbType.String);
 
         idParam.Value = id;
         balanceParam.Value = balance;
-        //nameParam.Value = name;
 
         _command.Parameters.Add(idParam);
         _command.Parameters.Add(balanceParam);
-        //_command.Parameters.Add(nameParam);
 
         _command.Prepare();
         _command.ExecuteNonQuery();
@@ -187,7 +187,7 @@ public class DataBaseSQL
         return id;
     }
 
-    public string GetIdById(int id)
+    public string GetNameById(int id)//Hämtar namn genom ID
     {
         Open();
 
@@ -198,7 +198,7 @@ public class DataBaseSQL
         _command.CommandText = "SELECT name FROM ATM WHERE id = @id;";
         SQLiteDataReader rdr = _command.ExecuteReader();
 
-        string name = "";
+        string name = "";//Om inget namn hämtas är name tomt
         while (rdr.Read())
         {
             name = rdr.GetString(0);
@@ -209,15 +209,18 @@ public class DataBaseSQL
 
         return name;
     }
-    public void RemoveTemp(int id)
+    public void RemoveTemp(int id)//Tar bort den temporära guiden för att spara plats
     {
         Open();
-
+        string temp = "";
         SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+        SQLiteParameter tempParam = new SQLiteParameter("@temp", System.Data.DbType.String);
         idParam.Value = id;
+        tempParam.Value = temp;
         _command.Parameters.Add(idParam);
+        _command.Parameters.Add(tempParam);
 
-        _command.CommandText = "DELETE FROM ATM WHERE id = @id;";
+        _command.CommandText = "UPDATE ATM SET temp = @temp WHERE id = @id;";
 
         _command.Prepare();
         _command.ExecuteNonQuery();
@@ -225,7 +228,6 @@ public class DataBaseSQL
         Close();
     }
     public string GetName(int id)
-    // för password borde kanske vara private 
     {
         Open();
 
@@ -250,7 +252,6 @@ public class DataBaseSQL
     }
 
     public string GetPassword(int id)
-    // för password borde kanske vara private 
     {
         Open();
 

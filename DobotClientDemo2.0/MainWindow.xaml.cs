@@ -677,8 +677,8 @@ namespace DobotClientDemo
                 return;//Då avslutas funktionen
 
             int a = 0;
-            string nameTry = db.GetIdById(ID);
-            //Kkontroll om ID finns, om namnet är tomt finns inte konto med inmatade ID
+            string nameTry = db.GetNameById(ID);
+            //Kontroll om ID finns, om namnet är tomt finns inte konto med inmatade ID
             try
             {
                 if (nameTry == "")//Om konto inte finns
