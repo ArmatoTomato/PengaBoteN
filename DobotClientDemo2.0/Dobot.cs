@@ -44,7 +44,7 @@ namespace DobotClientDemo
             left
         };
 
-        private UInt64 cp(byte mod, float x, float y, float z, float velocity, UInt64 cmdIndex = 0)
+        private UInt64 CP(byte mod, float x, float y, float z, float velocity, UInt64 cmdIndex = 0)
         {
             //hur roboten ska göra sig och med vilken hastighet
             CPCmd pdbCmd;
@@ -216,7 +216,7 @@ namespace DobotClientDemo
 
                         }
                         pose.z = 50;
-                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
 
                         break;
                     }
@@ -227,7 +227,7 @@ namespace DobotClientDemo
                         pose.y = 162.9993f;
                         pose.z = 50;
 
-                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                     }
 
@@ -243,28 +243,28 @@ namespace DobotClientDemo
                         pose.y = hOMEParams.y;
                         pose.z = hOMEParams.z;
 
-                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                     }
                 case 3:
                     {
                         pose.z = 49;
 
-                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                     }
                 case 4:
                     {
                         pose.z = 13;
 
-                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                     }
                 case 5:
                     {
                         pose.z = -43.6f;
 
-                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                     }
                 case 6:
@@ -274,7 +274,7 @@ namespace DobotClientDemo
                         pose.y = -220;
                         pose.z = 50;
 
-                        cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
+                        cmdIndex = CP((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                 }
             }

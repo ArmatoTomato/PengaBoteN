@@ -331,7 +331,7 @@ namespace DobotClientDemo
                 MessageBox.Show("Invalid credentials");
             }
 
-            Balance.Text = "Your balance is: " + db.GetBalance(ID).ToString() + "sek";
+            Balance.Text = "Your balance is: " + db.GetBalance(ID).ToString() + "MILLION sek";
         }
 
         private void IDTextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
