@@ -62,11 +62,15 @@ namespace DobotClientDemo
         //Knappen som byter mellan dark och light mode (kan vara färblinds anpassat)
         private void DarkMode(object sender, RoutedEventArgs e)
         {
-            Background = Brushes.Black;
+            Background = Brushes.DarkSlateGray;
+            Balance.Foreground = Brushes.White;
+            DarksMode.Content = "Light mode";
         }
         private void LightMode(object sender, RoutedEventArgs e)
         {
             Background = Brushes.LightPink;
+            Balance.Foreground = Brushes.Black;
+            DarksMode.Content = "Dark mode";
         }
 
 
