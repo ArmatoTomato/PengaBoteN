@@ -24,9 +24,11 @@ namespace DobotClientDemo
     {
         private Pose pose = new Pose();
         private int cubesInBank = 2;
+        //Börja med att denifinera hur många kuber som finns i banken 
 
         enum Position
         {
+            //enum till switch case för olika positioner
             moneyPool,
             sensor,
             neutral,
@@ -37,12 +39,14 @@ namespace DobotClientDemo
         };
         enum ConveyerDirection
         {
+            // precis vad det står, om bandet ska rulla höger elelr vänter i en switch case
             right,
             left
         };
 
         private UInt64 cp(byte mod, float x, float y, float z, float velocity, UInt64 cmdIndex = 0)
         {
+            //hur roboten ska göra sig och med vilken hastighet
             CPCmd pdbCmd;
 
             pdbCmd.cpMode = mod;
@@ -64,6 +68,7 @@ namespace DobotClientDemo
 
         public void Withdraw(ref UInt64 cmdIndex)
         {
+            // om det inte finns några pengar att ta ut ska man inte kunna ta ut pengar
             if (cubesInBank == 0)
             {
                 return;
@@ -85,13 +90,14 @@ namespace DobotClientDemo
             DobotGoToActionPose((int)Position.up, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.neutral, ref cmdIndex, ref pose);
             DobotMoveBand((int)ConveyerDirection.right, ref cmdIndex, ref pose);
-
+            //roboten går enligt schemat till sina olika positioner
 
 
         }
 
         public void Deposit(ref UInt64 cmdIndex)
         {
+            // sätter på laser och börjar rulla bandet för att invänta att ågot går i vägen för sensorn
             DobotDll.SetInfraredSensor(true, 1, 1);
             EMotor e;
             e.index = 0;
@@ -110,32 +116,36 @@ namespace DobotClientDemo
             byte value = 0;
             int i = 0;
             while (true)
+                // för alltid loop tills att det antingen tar för lång tid eller sensorn känenr av något
             {
                 DobotDll.GetInfraredSensor(1, ref value);
                 if (value == 1)
                 {
                     e.isEnabled = 0;
                     DobotDll.SetEMotor(ref e, false, ref cmdIndex);
+                    // stänger av rullbandet när den upptäcker något
                     break;
                 }
                 i++;
                 if(i==1000000)
                 {
-                    // om det tar för lång tid bör funktionen avbrytas. Tänk så har gunden blivit rånad och behövt springa iväg????
+                    // om det tar för lång tid bör funktionen avbrytas. Tänk så har kunden blivit rånad och behövt springa iväg????
                     break;
                 }
                 
             }
             DobotDll.SetInfraredSensor(false, 1, 1);
+            // stänger av sensorn 
 
-
-
+            //lägger till en kub nu när maskinen vet att den finns
             cubesInBank = cubesInBank + 1;
 
             if (cubesInBank > 4)
             {
                 cubesInBank = cubesInBank - 1;
+                DobotMoveBand((int)ConveyerDirection.right, ref cmdIndex, ref pose);
                 return;
+                // om det är fullt i maskinen får man bara tillbaka sin peng
 
             }
 
@@ -151,6 +161,7 @@ namespace DobotClientDemo
             DobotGoToActionPose((int)Position.up, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.moneyPoolSideOfConvBelt, ref cmdIndex, ref pose);
             DobotGoToActionPose((int)Position.neutral, ref cmdIndex, ref pose);
+            // rörelsemöntret för att sätta in pengar
         }
 
 
@@ -158,9 +169,11 @@ namespace DobotClientDemo
         {
             DobotDll.SetQueuedCmdStartExec();
             UInt64 temp = cmdIndex;
+            // en temp för att senare kunna jämföra med cmdindex och se så att allt i kön har utförts
             
             switch (mode)
             {
+                //en switchcase baserat på 
                 case 0:
                     {
                         if (cubesInBank > 4)
@@ -234,14 +247,14 @@ namespace DobotClientDemo
                     }
                 case 3:
                     {
-                        pose.z = 50;
+                        pose.z = 49;
 
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
                     }
                 case 4:
                     {
-                        pose.z = 14;
+                        pose.z = 13;
 
                         cmdIndex = cp((byte)ContinuousPathMode.CPAbsoluteMode, pose.x, pose.y, pose.z, 100, cmdIndex);
                         break;
@@ -276,6 +289,7 @@ namespace DobotClientDemo
             double STEP_PER_CRICLE = 360.0 / 1.8 * 10.0 * 16.0;
             double MM_PER_CRICLE = 3.1415926535898 * 36.0;
             UInt32 dist = (uint)(25 * STEP_PER_CRICLE / MM_PER_CRICLE);
+            //Måste vara en positiv för avståndet men genom att göra hastigheten nergativ kan man få bandet att åka fram och tillbaka. 
 
             EMotorS motor = new EMotorS();
             motor.index = 0;
@@ -314,6 +328,7 @@ namespace DobotClientDemo
 
         private void DobotDrop(ref UInt64 cmdIndex, ref Pose pose)
         {
+            //stänga av sugproppen
 
             DobotDll.SetEndEffectorSuctionCup(true, false, true, ref cmdIndex);
 
@@ -321,12 +336,14 @@ namespace DobotClientDemo
 
         private void DobotPickUp(ref UInt64 cmdIndex, ref Pose pose)
         {
+            //säta på sugproppen
             DobotDll.SetEndEffectorSuctionCup(true, true, true, ref cmdIndex);
 
         }
 
         public void DobotLaserOn()
         {
+            //lazer
             DobotDll.SetInfraredSensor(true, 1, 1);
 
             byte a = 1;
@@ -337,23 +354,5 @@ namespace DobotClientDemo
             }
         }
 
-        //private void DobotMoveBand(ref UInt64 cmdIndex)
-        //{
-
-        //    double STEP_PER_CRICLE = 360.0 / 1.8 * 10.0 * 16.0;
-        //    double MM_PER_CRICLE = 3.1415926535898 * 36.0;
-        //    UInt32 dist = (uint)(25 * STEP_PER_CRICLE / MM_PER_CRICLE);
-
-        //    EMotorS motor = new EMotorS();
-        //    motor.index = 0;
-        //    motor.isEnabled = 1;
-        //    motor.speed = -9000;
-        //    motor.distance = dist;
-        //    int s = DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
-
-        //    motor.isEnabled = 0;
-        //    DobotDll.SetEMotorS(ref motor, false, ref cmdIndex);
-
-        //}
     }
 }

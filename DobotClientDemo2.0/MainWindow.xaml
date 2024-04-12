@@ -47,6 +47,6 @@
             <Button Content="Withdraw" Margin="83,45,434,66" Click="ButtonWithdraw_Click" Grid.Row="2"/>
             <Button Content="Deposit" Margin="414,40,103,71" Click="ButtonDeposit_Click" Grid.Row="2"/>
         </Grid>
-        <ToggleButton x:Name ="DarksMode" Margin="951,34,29,35" Width="100" Content="Dark mode" Checked="DarkMode" Unchecked="LightMode"/>
+        <ToggleButton x:Name ="DarksMode" Margin="963,40,17,29" Content="Dark mode" Width="100" Checked="DarkMode" Unchecked="LightMode"/>
     </Grid>
 </Window>
