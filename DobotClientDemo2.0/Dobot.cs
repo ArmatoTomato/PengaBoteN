@@ -187,6 +187,7 @@ namespace DobotClientDemo
                         switch (cubesInBank)
                         {
                             case 0: { return; }
+                                //kontrollera så att det faktiskt finns pengar i banken annars ska det inte gå att ta ut pengar.
 
                             case 1:
                                 {
